@@ -1,4 +1,4 @@
-package nextstep.subway.util;
+package nextstep.utils.step;
 
 import io.restassured.RestAssured;
 import nextstep.common.dto.ErrorResponse;
@@ -7,10 +7,10 @@ import org.springframework.http.MediaType;
 
 public class PathStep {
 
-    public static PathResponse 경로_조회(Long source, Long target) {
+    public static PathResponse 경로_조회_길이(Long source, Long target) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/paths?source=" + source + "&target=" + target)
+                .when().get("/paths?source=" + source + "&target=" + target + "&type=DISTANCE")
                 .then().log().all()
                 .extract().response().body().as(PathResponse.class);
     }
@@ -23,10 +23,10 @@ public class PathStep {
                 .extract().response().body().as(PathResponse.class);
     }
 
-    public static ErrorResponse 경로_조회_실패(Long source, Long target) {
+    public static ErrorResponse 경로_조회_기간_실패(Long source, Long target) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/paths?source=" + source + "&target=" + target)
+                .when().get("/paths?source=" + source + "&target=" + target + "&type=DISTANCE")
                 .then().log().all()
                 .extract().response().body().as(ErrorResponse.class);
     }

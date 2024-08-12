@@ -59,7 +59,7 @@ public class SectionServiceMockTest {
         언주역 = Station.of(4L, "언주역");
         논현역 = Station.of(5L, "논현역");
 
-        강남역_선릉역_구간 = Section.of(강남역, 선릉역, 1L);
+        강남역_선릉역_구간 = Section.of(강남역, 선릉역, 1L, 5L);
         신분당선_구간.addSection(강남역_선릉역_구간);
         신분당선 = Line.of(1L, "신분당선", "Red", 10L, 신분당선_구간);
     }
@@ -74,7 +74,7 @@ public class SectionServiceMockTest {
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
         // when
-        var 삼성역_강남역_구간_생성_요청 = SectionRequest.of(삼성역.getId(), 강남역.getId(), 5L);
+        var 삼성역_강남역_구간_생성_요청 = SectionRequest.of(삼성역.getId(), 강남역.getId(), 5L, 5L);
         var 삼성역_강남역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 삼성역_강남역_구간_생성_요청);
 
         // then
@@ -103,10 +103,10 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        sectionService.createSection(신분당선.getId(), SectionRequest.of(선릉역.getId(), 삼성역.getId(), 5L));
+        sectionService.createSection(신분당선.getId(), SectionRequest.of(선릉역.getId(), 삼성역.getId(), 5L, 5L));
 
         // when
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         var 선릉역_언주역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // then
@@ -136,7 +136,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
 
         // when
         var 선릉역_언주역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
@@ -164,7 +164,7 @@ public class SectionServiceMockTest {
         // given
         when(lineRepository.findById(2L)).thenReturn(Optional.ofNullable(null));
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
 
         // when & then
         assertThrows(LineNotFoundException.class, () -> sectionService.createSection(2L, 선릉역_언주역_구간_생성_요청))
@@ -178,7 +178,7 @@ public class SectionServiceMockTest {
         when(lineRepository.findById(1L)).thenReturn(Optional.ofNullable(신분당선));
         when(stationRepository.findById(10L)).thenReturn(Optional.ofNullable(null));
 
-        var 존재하지_않는역과_언주역_구간_생성_요청 = SectionRequest.of(10L, 언주역.getId(), 1L);
+        var 존재하지_않는역과_언주역_구간_생성_요청 = SectionRequest.of(10L, 언주역.getId(), 1L, 5L);
 
         // when & then
         assertThrows(StationNotFoundException.class, () -> sectionService.createSection(신분당선.getId(), 존재하지_않는역과_언주역_구간_생성_요청))
@@ -193,7 +193,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(stationRepository.findById(10L)).thenReturn(Optional.ofNullable(null));
 
-        var 언주역과_존재하지_않는_역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 10L, 1L);
+        var 언주역과_존재하지_않는_역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 10L, 1L, 5L);
 
         // when & then
         assertThrows(StationNotFoundException.class, () -> sectionService.createSection(신분당선.getId(), 언주역과_존재하지_않는_역_구간_생성_요청))
@@ -209,7 +209,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -231,9 +231,9 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(5L)).thenReturn(Optional.ofNullable(논현역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
-        var 언주역_논현역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 논현역.getId(), 2L);
+        var 언주역_논현역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 논현역.getId(), 2L, 5L);
         sectionService.createSection(신분당선.getId(), 언주역_논현역_구간_생성_요청);
 
         // when & then
@@ -255,7 +255,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -276,7 +276,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
         when(lineRepository.save(신분당선)).thenReturn(신분당선);
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -293,7 +293,7 @@ public class SectionServiceMockTest {
         when(stationRepository.findById(2L)).thenReturn(Optional.ofNullable(선릉역));
         when(stationRepository.findById(4L)).thenReturn(Optional.ofNullable(언주역));
 
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then

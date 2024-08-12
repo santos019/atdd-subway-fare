@@ -33,18 +33,18 @@ public class GraphModel {
         return new GraphModel(source, target);
     }
 
-    public Path findPath(final List<Line> lines) {
-        createGraphModel(lines);
+    public Path findPath(final List<Line> lines, final String type) {
+        createGraphModel(lines, type);
         return findShortestPath(lines);
     }
 
-    public void createGraphModel(final List<Line> lines) {
+    public void createGraphModel(final List<Line> lines, final String type) {
         if (lines.isEmpty()) {
             throw new PathException(String.valueOf(PATH_NOT_FOUND));
         }
 
         for (Line line : lines) {
-            addSectionsToGraph(line);
+            addSectionsToGraph(line, type);
         }
 
         containsVertex(source);
@@ -112,14 +112,15 @@ public class GraphModel {
         return Optional.empty();
     }
 
-    public void addSectionsToGraph(final Line line) {
+    public void addSectionsToGraph(final Line line, String type) {
         List<Section> sectionList = line.getSections().getSections();
 
         if (sectionList.isEmpty()) {
             throw new PathException(String.valueOf(PATH_NOT_FOUND));
         }
         for (Section section : sectionList) {
-            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), section.getDistance());
+            Long weight = section.getWeight(type);
+            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), weight);
         }
     }
 

@@ -15,20 +15,23 @@ public class CreateLineRequest {
     private Long upStationId;
     @NotNull
     private Long distance;
+    @NotNull
+    private Long duration;
 
     public CreateLineRequest() {
     }
 
-    public CreateLineRequest(String name, String color, Long upStationId, Long downStationId, Long distance) {
+    public CreateLineRequest(String name, String color, Long upStationId, Long downStationId, Long distance, Long duration) {
         this.name = name;
         this.color = color;
         this.downStationId = downStationId;
         this.upStationId = upStationId;
         this.distance = distance;
+        this.duration = duration;
     }
 
-    public static CreateLineRequest of(final String name, final String color, final Long upStationId, final Long downStationId, final Long distance) {
-        return new CreateLineRequest(name, color, upStationId, downStationId, distance);
+    public static CreateLineRequest of(final String name, final String color, final Long upStationId, final Long downStationId, final Long distance, final Long duration) {
+        return new CreateLineRequest(name, color, upStationId, downStationId, distance, duration);
     }
 
     public String getName() {
@@ -50,6 +53,8 @@ public class CreateLineRequest {
     public Long getDownStationId() {
         return this.downStationId;
     }
+
+    public Long getDuration() { return this.duration; }
 
 }
 

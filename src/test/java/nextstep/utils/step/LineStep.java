@@ -1,4 +1,4 @@
-package nextstep.subway.util;
+package nextstep.utils.step;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -32,9 +32,9 @@ public class LineStep {
         return response.body().as(LinesResponse.class);
     }
 
-    public static LineResponse 지하철_노선_생성(String name, String color, Long upStationId, Long downStationId, Long distance) {
+    public static LineResponse 지하철_노선_생성(String name, String color, Long upStationId, Long downStationId, Long distance, Long duration) {
         CreateLineRequest createLineRequest = CreateLineRequest.of(name, color, upStationId,
-                downStationId, distance);
+                downStationId, distance, duration);
 
         ExtractableResponse<Response> createdResponse = RestAssured.given().log().all()
                 .body(createLineRequest)

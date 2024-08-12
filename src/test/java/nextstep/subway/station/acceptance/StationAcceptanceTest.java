@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static nextstep.subway.util.StationStep.*;
+import static nextstep.utils.step.StationStep.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("지하철역 관련 기능")

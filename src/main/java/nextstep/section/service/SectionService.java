@@ -34,7 +34,7 @@ public class SectionService {
 
         Station upStation = stationService.getStationByIdOrThrow(sectionRequest.getUpStationId());
         Station downStation = stationService.getStationByIdOrThrow(sectionRequest.getDownStationId());
-        Section section = Section.of(upStation, downStation, sectionRequest.getDistance());
+        Section section = Section.of(upStation, downStation, sectionRequest.getDistance(), sectionRequest.getDuration());
 
         sections.addSection(section);
         lineService.saveLine(line);

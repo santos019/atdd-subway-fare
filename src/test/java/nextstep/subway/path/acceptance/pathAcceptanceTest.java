@@ -12,11 +12,11 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static nextstep.common.constant.ErrorCode.*;
-import static nextstep.subway.util.LineStep.지하철_노선_생성;
-import static nextstep.subway.util.PathStep.경로_조회;
-import static nextstep.subway.util.PathStep.경로_조회_실패;
-import static nextstep.subway.util.SectionStep.지하철_구간_등록;
-import static nextstep.subway.util.StationStep.지하철_역_등록;
+import static nextstep.utils.step.LineStep.지하철_노선_생성;
+import static nextstep.utils.step.PathStep.경로_조회_길이;
+import static nextstep.utils.step.PathStep.경로_조회_기간_실패;
+import static nextstep.utils.step.SectionStep.지하철_구간_등록;
+import static nextstep.utils.step.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,11 +51,11 @@ public class pathAcceptanceTest extends AcceptanceTest {
         양재역 = 지하철_역_등록("양재");
         용산역 = 지하철_역_등록("용산");
 
-        이호선 = 지하철_노선_생성("2호선", "green", 교대역.getId(), 강남역.getId(), 10L).getId();
-        신분당선 = 지하철_노선_생성("신분당선", "red", 강남역.getId(), 양재역.getId(), 10L).getId();
-        삼호선 = 지하철_노선_생성("3호선", "orange", 교대역.getId(), 남부터미널역.getId(), 2L).getId();
+        이호선 = 지하철_노선_생성("2호선", "green", 교대역.getId(), 강남역.getId(), 10L, 5L).getId();
+        신분당선 = 지하철_노선_생성("신분당선", "red", 강남역.getId(), 양재역.getId(), 10L, 5L).getId();
+        삼호선 = 지하철_노선_생성("3호선", "orange", 교대역.getId(), 남부터미널역.getId(), 2L, 5L).getId();
 
-        지하철_구간_등록(삼호선, SectionRequest.of(남부터미널역.getId(), 양재역.getId(), 3L));
+        지하철_구간_등록(삼호선, SectionRequest.of(남부터미널역.getId(), 양재역.getId(), 3L, 5L));
 
     }
 
@@ -70,7 +70,7 @@ public class pathAcceptanceTest extends AcceptanceTest {
     @Test
     public void paths_find_success() {
         // when
-        var 경로_조회_결과 = 경로_조회(교대역.getId(), 양재역.getId());
+        var 경로_조회_결과 = 경로_조회_길이(교대역.getId(), 양재역.getId());
 
         // then
         assertThat(경로_조회_결과.getStationResponses()).isEqualTo(List.of(교대역, 남부터미널역, 양재역));
@@ -84,7 +84,7 @@ public class pathAcceptanceTest extends AcceptanceTest {
     @Test
     public void paths_find_fail() {
         // when
-        var 경로_조회_결과 = 경로_조회_실패(교대역.getId(), 교대역.getId());
+        var 경로_조회_결과 = 경로_조회_기간_실패(교대역.getId(), 교대역.getId());
 
         // then
         assertAll(
@@ -102,7 +102,7 @@ public class pathAcceptanceTest extends AcceptanceTest {
     @Test
     public void paths_find_fail2() {
         // when
-        var 경로_조회_결과 = 경로_조회_실패(교대역.getId(), 용산역.getId());
+        var 경로_조회_결과 = 경로_조회_기간_실패(교대역.getId(), 용산역.getId());
 
         // then
         assertAll(
@@ -124,7 +124,7 @@ public class pathAcceptanceTest extends AcceptanceTest {
         var 존재하지_않는_역_2 = 11L;
 
         // when
-        var 경로_조회_결과 = 경로_조회_실패(존재하지_않는_역_1, 존재하지_않는_역_2);
+        var 경로_조회_결과 = 경로_조회_기간_실패(존재하지_않는_역_1, 존재하지_않는_역_2);
 
         // then
         assertAll(

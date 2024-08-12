@@ -11,10 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static nextstep.subway.util.AuthStep.로그인_후_토큰_발급;
+import static nextstep.utils.step.AuthStep.로그인_후_토큰_발급;
 import static nextstep.utils.step.FavoriteStep.*;
-import static nextstep.subway.util.LineStep.지하철_노선_생성;
-import static nextstep.subway.util.StationStep.지하철_역_등록;
+import static nextstep.utils.step.LineStep.지하철_노선_생성;
+import static nextstep.utils.step.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -38,7 +38,7 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
     public void setup() {
         강남역 = 지하철_역_등록("강남역");
         역삼역 = 지하철_역_등록("역삼역");
-        이호선 = 지하철_노선_생성("2호선", "green", 강남역.getId(), 역삼역.getId(), 10L).getId();
+        이호선 = 지하철_노선_생성("2호선", "green", 강남역.getId(), 역삼역.getId(), 10L, 5L).getId();
 
         즐겨찾기_요청_강남역_역삼역 = FavoriteRequest.of(강남역.getId(), 역삼역.getId());
 

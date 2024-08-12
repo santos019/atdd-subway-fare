@@ -33,7 +33,7 @@ public class PathTest {
         역삼역 = Station.of(2L, "역삼역");
 
 
-        강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L);
+        강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L, 5L);
         구간들 = new Sections(Collections.singletonList(강남역_역삼역_구간));
         신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들);
         path = Path.of(List.of(강남역, 역삼역), pathWeight);

@@ -9,18 +9,21 @@ public class SectionRequest {
     private Long downStationId;
     @NotNull
     private Long distance;
+    @NotNull
+    private Long duration;
 
     public SectionRequest() {
     }
 
-    public SectionRequest(Long upStationId, Long downStationId, Long distance) {
+    public SectionRequest(Long upStationId, Long downStationId, Long distance, Long duration) {
         this.upStationId = upStationId;
         this.downStationId = downStationId;
         this.distance = distance;
+        this.duration = duration;
     }
 
-    public static SectionRequest of(final Long upStationId, final Long downStationId, final Long distance) {
-        return new SectionRequest(upStationId, downStationId, distance);
+    public static SectionRequest of(final Long upStationId, final Long downStationId, final Long distance, final Long duration) {
+        return new SectionRequest(upStationId, downStationId, distance, duration);
     }
 
     public Long getUpStationId() {
@@ -34,5 +37,10 @@ public class SectionRequest {
     public Long getDistance() {
         return distance;
     }
+
+    public Long getDuration() {
+        return duration;
+    }
+
 }
 

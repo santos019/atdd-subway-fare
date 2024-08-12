@@ -40,8 +40,9 @@ public class StationController {
 
     @GetMapping("/paths")
     public ResponseEntity<Object> retrieveStationPath(@RequestParam("source") Long source,
-                                                      @RequestParam("target") Long target) {
-        return ResponseEntity.ok().body(pathFinder.retrieveStationPath(source, target));
+                                                      @RequestParam("target") Long target,
+                                                      @RequestParam("type") String type) {
+        return ResponseEntity.ok().body(pathFinder.retrieveStationPath(type, source, target));
     }
 }
 

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static nextstep.common.constant.ErrorCode.SECTION_DISTANCE_TOO_SHORT;
+import static nextstep.common.constant.Type.DISTANCE;
+import static nextstep.common.constant.Type.DURATION;
 
 @Entity
 public class Section {
@@ -27,6 +29,9 @@ public class Section {
     @NotNull
     private Long distance;
 
+    @NotNull
+    private Long duration;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "PREVIOUS_SECTION_ID")
     private Section previousSection;
@@ -38,27 +43,38 @@ public class Section {
     public Section() {
     }
 
-    public Section(Long id, Station upStation, Station downStation, Long distance) {
+    public Section(Long id, Station upStation, Station downStation, Long distance, Long duration) {
         this.id = id;
         this.upStation = upStation;
         this.downStation = downStation;
         this.distance = distance;
+        this.duration = duration;
     }
 
-    public static Section of(final Long id, final Station upStation, final Station downStation, final Long distance) {
+    public static Section of(final Long id, final Station upStation, final Station downStation, final Long distance, final Long duration) {
         if (distance < 1) {
             throw new SectionException(String.valueOf(SECTION_DISTANCE_TOO_SHORT));
         }
 
-        return new Section(id, upStation, downStation, distance);
+        return new Section(id, upStation, downStation, distance, duration);
     }
 
-    public static Section of(final Station upStation, final Station downStation, final Long distance) {
+    public static Section of(final Station upStation, final Station downStation, final Long distance, final Long duration) {
         if (distance < 1) {
             throw new SectionException(String.valueOf(SECTION_DISTANCE_TOO_SHORT));
         }
 
-        return of(null, upStation, downStation, distance);
+        return of(null, upStation, downStation, distance, duration);
+    }
+
+    public Long getWeight(String type) {
+        if (DISTANCE.getValue().equalsIgnoreCase(type)) {
+            return this.distance;
+        } else if (DURATION.getValue().equalsIgnoreCase(type)) {
+            return this.duration;
+        } else {
+            throw new IllegalArgumentException("Invalid type: " + type);
+        }
     }
 
     public Long getId() {
@@ -81,6 +97,10 @@ public class Section {
         return this.distance;
     }
 
+    public Long getDuration() {
+        return this.duration;
+    }
+
     public Section getPreviousSection() {
         return previousSection;
     }
@@ -95,6 +115,10 @@ public class Section {
 
     public void setDistance(Long distance) {
         this.distance = distance;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 
     public Section getNextSection() {

@@ -1,8 +1,6 @@
 package nextstep.cucumber.steps;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java8.En;
 import nextstep.cucumber.AcceptanceContext;
 import nextstep.line.dto.LineResponse;
@@ -16,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static nextstep.subway.util.LineStep.지하철_노선_생성;
-import static nextstep.subway.util.PathStep.경로_조회;
-import static nextstep.subway.util.PathStep.경로_조회_시간;
-import static nextstep.subway.util.SectionStep.지하철_구간_등록;
-import static nextstep.subway.util.StationStep.지하철_역_등록;
+import static nextstep.utils.step.LineStep.지하철_노선_생성;
+import static nextstep.utils.step.PathStep.경로_조회_길이;
+import static nextstep.utils.step.PathStep.경로_조회_시간;
+import static nextstep.utils.step.SectionStep.지하철_구간_등록;
+import static nextstep.utils.step.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PathStepDef implements En {
@@ -43,7 +41,7 @@ public class PathStepDef implements En {
                 StationResponse upStation = (StationResponse) context.store.get(params.get("upStation"));
                 StationResponse downStation = (StationResponse) context.store.get(params.get("downStation"));
 
-                LineResponse lineResponse = 지하철_노선_생성(params.get("name"), params.get("color"), upStation.getId(), downStation.getId(), Long.valueOf(params.get("distance")));
+                LineResponse lineResponse = 지하철_노선_생성(params.get("name"), params.get("color"), upStation.getId(), downStation.getId(), Long.valueOf(params.get("distance")), Long.valueOf(params.get("duration")));
 
                 context.store.put(params.get("name"), lineResponse);
             }
@@ -57,7 +55,8 @@ public class PathStepDef implements En {
                 StationResponse upStation = (StationResponse) context.store.get(params.get("upStation"));
                 StationResponse downStation = (StationResponse) context.store.get(params.get("downStation"));
                 Long distance = Long.valueOf(params.get("distance"));
-                SectionResponse sectionResponse = 지하철_구간_등록(lineResponse.getId(), SectionRequest.of(upStation.getId(), downStation.getId(), distance));
+                Long duration = Long.valueOf(params.get("duration"));
+                SectionResponse sectionResponse = 지하철_구간_등록(lineResponse.getId(), SectionRequest.of(upStation.getId(), downStation.getId(), distance, duration));
             }
 
         });
@@ -65,7 +64,7 @@ public class PathStepDef implements En {
         When("{string}과 {string}의 경로를 조회하면", (String source, String target) -> {
             Long sourceId = ((StationResponse) context.store.get(source)).getId();
             Long targetId = ((StationResponse) context.store.get(target)).getId();
-            PathResponse pathResponse = 경로_조회(sourceId, targetId);
+            PathResponse pathResponse = 경로_조회_길이(sourceId, targetId);
             context.store.put("path", pathResponse);
 
         });

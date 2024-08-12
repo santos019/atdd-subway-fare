@@ -29,9 +29,9 @@ public class SectionTest {
         강남역 = Station.of(2L, "강남역");
         선릉역 = Station.of(3L, "선릉역");
         선정릉역 = Station.of(4L, "선정릉역");
-        역삼역_강남역 = Section.of(1L, 역삼역, 강남역, 2L);
-        강남역_선릉역 = Section.of(2L, 강남역, 선릉역, 2L);
-        선릉역_선정릉역 = Section.of(3L, 선릉역, 선정릉역, 1L);
+        역삼역_강남역 = Section.of(1L, 역삼역, 강남역, 2L, 5L);
+        강남역_선릉역 = Section.of(2L, 강남역, 선릉역, 2L, 5L);
+        선릉역_선정릉역 = Section.of(3L, 선릉역, 선정릉역, 1L, 5L);
 
         생성된_구간들 = new Sections();
     }
@@ -40,7 +40,7 @@ public class SectionTest {
     @DisplayName("Section의 Distance는 1 이상의 값을 가져야한다.")
     public void section_distance() {
         // when & then
-        assertThrows(SectionException.class, () -> Section.of(역삼역, 강남역, 0L))
+        assertThrows(SectionException.class, () -> Section.of(역삼역, 강남역, 0L, 5L))
                 .getMessage().equals("구간의 길이는 최소 1 이상이어야 합니다.");
     }
 
@@ -63,7 +63,7 @@ public class SectionTest {
         생성된_구간들.addSection(강남역_선릉역);
 
         // when
-        var 중간_구간에_추가할_Section = Section.of(강남역, 선정릉역, 1L);
+        var 중간_구간에_추가할_Section = Section.of(강남역, 선정릉역, 1L, 5L);
         생성된_구간들.addSection(중간_구간에_추가할_Section);
 
         // then
@@ -78,7 +78,7 @@ public class SectionTest {
         생성된_구간들.addSection(역삼역_강남역);
 
         // when
-        var 마지막_구간에_추가할_Section = Section.of(강남역, 선릉역, 2L);
+        var 마지막_구간에_추가할_Section = Section.of(강남역, 선릉역, 2L, 5L);
         생성된_구간들.addSection(마지막_구간에_추가할_Section);
 
         // then
@@ -103,7 +103,7 @@ public class SectionTest {
     public void add_section_fail2() {
         // given
         생성된_구간들.addSection(역삼역_강남역);
-        var 구간에_추가할_Section = Section.of(선정릉역, 선릉역, 2L);
+        var 구간에_추가할_Section = Section.of(선정릉역, 선릉역, 2L, 5L);
 
         // when & then
         assertThrows(SectionException.class, () -> 생성된_구간들.addSection(구간에_추가할_Section))
@@ -115,7 +115,7 @@ public class SectionTest {
     public void add_section_fail3() {
         // given
         생성된_구간들.addSection(역삼역_강남역);
-        var 구간에_추가할_Section = Section.of(역삼역, 선릉역, 2L);
+        var 구간에_추가할_Section = Section.of(역삼역, 선릉역, 2L, 5L);
 
         // when & then
         assertThrows(SectionException.class, () -> 생성된_구간들.addSection(구간에_추가할_Section))

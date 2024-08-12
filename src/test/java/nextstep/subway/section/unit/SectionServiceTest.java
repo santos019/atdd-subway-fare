@@ -17,8 +17,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static nextstep.subway.util.LineStep.지하철_노선_생성;
-import static nextstep.subway.util.StationStep.지하철_역_등록;
+import static nextstep.utils.step.LineStep.지하철_노선_생성;
+import static nextstep.utils.step.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,7 +45,7 @@ public class SectionServiceTest extends AcceptanceTest {
         언주역 = 지하철_역_등록("언주역");
         논현역 = 지하철_역_등록("논현역");
 
-        신분당선 = 지하철_노선_생성("신분당선", "Red", 강남역.getId(), 선릉역.getId(), 10L);
+        신분당선 = 지하철_노선_생성("신분당선", "Red", 강남역.getId(), 선릉역.getId(), 10L, 5L);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @Rollback
     public void createSection_first() {
         // when
-        var 삼성역_강남역_구간_생성_요청 = SectionRequest.of(삼성역.getId(), 강남역.getId(), 5L);
+        var 삼성역_강남역_구간_생성_요청 = SectionRequest.of(삼성역.getId(), 강남역.getId(), 5L, 5L);
         var 삼성역_강남역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 삼성역_강남역_구간_생성_요청);
 
         // then
@@ -69,10 +69,10 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("새로운 구간을 중간 구간에 생성한다.")
     public void createSection_middle() {
         // given
-        sectionService.createSection(신분당선.getId(), SectionRequest.of(선릉역.getId(), 삼성역.getId(), 5L));
+        sectionService.createSection(신분당선.getId(), SectionRequest.of(선릉역.getId(), 삼성역.getId(), 5L, 5L));
 
         // when
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         var 선릉역_언주역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // then
@@ -88,7 +88,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("새로운 구간을 마지막 구간에 생성한다.")
     public void createSection_last() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
 
         // when
         var 선릉역_언주역_구간_생성_응답 = sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
@@ -106,7 +106,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("새로운 구간의 lineId를 찾을 수 없다.")
     public void createSection_fail_lineId_cannot_found() {
         // given
-        var 언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
 
         // when & then
         assertThrows(LineNotFoundException.class, () -> sectionService.createSection(2L, 언주역_구간_생성_요청))
@@ -118,7 +118,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("새로운 구간의 upStation을 찾을 수 없다.")
     public void createSection_fail_upStation_cannot_found() {
         // given
-        var 언주역_구간_생성_요청 = SectionRequest.of(10L, 언주역.getId(), 1L);
+        var 언주역_구간_생성_요청 = SectionRequest.of(10L, 언주역.getId(), 1L, 5L);
 
         // when & then
         assertThrows(StationNotFoundException.class, () -> sectionService.createSection(신분당선.getId(), 언주역_구간_생성_요청))
@@ -129,7 +129,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("새로운 구간의 downStation을 찾을 수 없다.")
     public void createSection_fail_downStation_cannot_found() {
         // given
-        var 언주역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 10L, 1L);
+        var 언주역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 10L, 1L, 5L);
 
         // when & then
         assertThrows(StationNotFoundException.class, () -> sectionService.createSection(신분당선.getId(), 언주역_구간_생성_요청))
@@ -140,7 +140,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("상행 종점역을 가진 첫 번째 구간을 삭제한다.")
     public void delete_section_first_section() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -151,9 +151,9 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("중간 구간을 삭제한다.")
     public void delete_section_middle_section() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
-        var 언주역_논현역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 논현역.getId(), 2L);
+        var 언주역_논현역_구간_생성_요청 = SectionRequest.of(언주역.getId(), 논현역.getId(), 2L, 5L);
         sectionService.createSection(신분당선.getId(), 언주역_논현역_구간_생성_요청);
 
 
@@ -165,7 +165,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("하행 종점역을 가진 마지막 구간을 삭제한다.")
     public void delete_section_last_section() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -176,7 +176,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("구간에 존재하지 않는 역의 삭제 요청은 실패한다.")
     public void delete_section_fail1() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
@@ -188,7 +188,7 @@ public class SectionServiceTest extends AcceptanceTest {
     @DisplayName("삭제 구간의 대상이 되는 노선의 lineId를 찾을 수 없다.")
     public void delete_section_fail2() {
         // given
-        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L);
+        var 선릉역_언주역_구간_생성_요청 = SectionRequest.of(선릉역.getId(), 언주역.getId(), 1L, 5L);
         sectionService.createSection(신분당선.getId(), 선릉역_언주역_구간_생성_요청);
 
         // when & then
