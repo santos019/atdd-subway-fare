@@ -46,7 +46,6 @@ public class PathStepDef implements En {
 
                 context.store.put(params.get("name"), lineResponse);
             }
-
         });
 
         And("지하철 구간을 등록 요청하고", (DataTable table) -> {
@@ -60,7 +59,6 @@ public class PathStepDef implements En {
 
                 SectionResponse sectionResponse = 지하철_구간_등록(lineResponse.getId(), SectionRequest.of(upStation.getId(), downStation.getId(), distance, duration));
             }
-
         });
 
         When("{string}과 {string}의 경로를 조회하면", (String source, String target) -> {
@@ -69,7 +67,6 @@ public class PathStepDef implements En {
 
             PathResponse pathResponse = 경로_조회_길이(sourceId, targetId);
             context.store.put("path", pathResponse);
-
         });
 
         Then("{string} 경로가 조회된다", (String pathString) -> {
@@ -85,7 +82,6 @@ public class PathStepDef implements En {
 
             PathResponse pathResponse = 경로_조회_시간(sourceStation.getId(), targetStation.getId());
             context.store.put("path_duration", pathResponse);
-
         });
 
         Then("최소 시간 {string} 시간 기준으로 {string} 경로가 조회된다", (String expectedDuration, String pathString) -> {
