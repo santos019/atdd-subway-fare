@@ -112,7 +112,7 @@ public class GraphModel {
         return Optional.empty();
     }
 
-    public void addSectionsToGraph(final Line line, String type) {
+    public void addSectionsToGraph(final Line line, final String type) {
         List<Section> sectionList = line.getSections().getSections();
 
         if (sectionList.isEmpty()) {
