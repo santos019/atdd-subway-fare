@@ -15,6 +15,14 @@ public class PathStep {
                 .extract().response().body().as(PathResponse.class);
     }
 
+    public static PathResponse 경로_조회_시간(Long source, Long target) {
+        return RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/paths?source=" + source + "&target=" + target + "&type=DURATION")
+                .then().log().all()
+                .extract().response().body().as(PathResponse.class);
+    }
+
     public static ErrorResponse 경로_조회_실패(Long source, Long target) {
         return RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

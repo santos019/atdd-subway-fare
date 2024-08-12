@@ -1,6 +1,8 @@
 package nextstep.cucumber.steps;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java8.En;
 import nextstep.cucumber.AcceptanceContext;
 import nextstep.line.dto.LineResponse;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static nextstep.subway.util.LineStep.지하철_노선_생성;
 import static nextstep.subway.util.PathStep.경로_조회;
+import static nextstep.subway.util.PathStep.경로_조회_시간;
 import static nextstep.subway.util.SectionStep.지하철_구간_등록;
 import static nextstep.subway.util.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,5 +76,23 @@ public class PathStepDef implements En {
             List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
             assertThat(actualPath).containsExactly(split.toArray(new String[0]));
         });
+
+        When("{string}과 {string}의 경로를 최소 시간 기준으로 경로 조회하면", (String source, String target) -> {
+            StationResponse sourceStation = (StationResponse) context.store.get(source);
+            StationResponse targetStation = (StationResponse) context.store.get(target);
+
+            PathResponse pathResponse = 경로_조회_시간(sourceStation.getId(), targetStation.getId());
+            context.store.put("path_duration", pathResponse);
+
+        });
+
+        Then("최소 시간 기준으로 {string} 경로가 조회된다", (String pathString) -> {
+            List<String> split = List.of(pathString.split(","));
+            PathResponse pathResponse = (PathResponse) context.store.get("path_duration");
+            List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
+            assertThat(actualPath).containsExactly(split.toArray(new String[0]));
+        });
+
     }
 }
+
