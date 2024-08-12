@@ -20,6 +20,7 @@ import static nextstep.utils.step.PathStep.경로_조회_시간;
 import static nextstep.utils.step.SectionStep.지하철_구간_등록;
 import static nextstep.utils.step.StationStep.지하철_역_등록;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class PathStepDef implements En {
     @Autowired
@@ -56,6 +57,7 @@ public class PathStepDef implements En {
                 StationResponse downStation = (StationResponse) context.store.get(params.get("downStation"));
                 Long distance = Long.valueOf(params.get("distance"));
                 Long duration = Long.valueOf(params.get("duration"));
+
                 SectionResponse sectionResponse = 지하철_구간_등록(lineResponse.getId(), SectionRequest.of(upStation.getId(), downStation.getId(), distance, duration));
             }
 
@@ -64,6 +66,7 @@ public class PathStepDef implements En {
         When("{string}과 {string}의 경로를 조회하면", (String source, String target) -> {
             Long sourceId = ((StationResponse) context.store.get(source)).getId();
             Long targetId = ((StationResponse) context.store.get(target)).getId();
+
             PathResponse pathResponse = 경로_조회_길이(sourceId, targetId);
             context.store.put("path", pathResponse);
 
@@ -89,8 +92,11 @@ public class PathStepDef implements En {
             List<String> split = List.of(pathString.split(","));
             PathResponse pathResponse = (PathResponse) context.store.get("path_duration");
             List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
-            assertThat(actualPath).containsExactly(split.toArray(new String[0]));
-            assertThat(pathResponse.getWeight()).isEqualTo(Double.valueOf(expectedDuration));
+
+            assertAll(
+                    () -> assertThat(actualPath).containsExactly(split.toArray(new String[0])),
+                    () -> assertThat(pathResponse.getWeight()).isEqualTo(Double.valueOf(expectedDuration))
+            );
         });
 
     }
