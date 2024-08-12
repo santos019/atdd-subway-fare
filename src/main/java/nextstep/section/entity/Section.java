@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-import static nextstep.common.constant.ErrorCode.SECTION_DISTANCE_TOO_SHORT;
+import static nextstep.common.constant.ErrorCode.*;
 import static nextstep.common.constant.Type.DISTANCE;
 import static nextstep.common.constant.Type.DURATION;
 
@@ -63,6 +63,9 @@ public class Section {
         if (distance < 1) {
             throw new SectionException(String.valueOf(SECTION_DISTANCE_TOO_SHORT));
         }
+        if (duration < 1) {
+            throw new SectionException(String.valueOf(SECTION_DURATION_TOO_SHORT));
+        }
 
         return of(null, upStation, downStation, distance, duration);
     }
@@ -73,7 +76,7 @@ public class Section {
         } else if (DURATION.getValue().equalsIgnoreCase(type)) {
             return this.duration;
         } else {
-            throw new IllegalArgumentException("Invalid type: " + type);
+            throw new SectionException(SECTION_TYPE_NOT_FOUND + "Invalid type: " + type);
         }
     }
 

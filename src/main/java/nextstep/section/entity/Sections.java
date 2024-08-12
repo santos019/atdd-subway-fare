@@ -68,11 +68,13 @@ public class Sections {
 
     private void updateSectionData(final Section newSection, final Section nextSection) {
         checkSectionDistance(nextSection, newSection);
+        checkSectionDuration(nextSection, newSection);
         newSection.setPreviousSection(nextSection.getPreviousSection());
         newSection.setNextSection(nextSection);
         nextSection.setPreviousSection(newSection);
         nextSection.setUpStation(newSection.getDownStation());
         nextSection.setDistance(nextSection.getDistance() - newSection.getDistance());
+        nextSection.setDuration(nextSection.getDuration() - newSection.getDuration());
     }
 
     public void removeSection(final Section section) {
@@ -121,6 +123,7 @@ public class Sections {
             prevSection.setNextSection(nextSection);
             prevSection.setDownStation(nextSection.getUpStation());
             prevSection.setDistance(originalSection.getDistance() + prevSection.getDistance());
+            prevSection.setDuration(originalSection.getDuration() + prevSection.getDuration());
             nextSection.setPreviousSection(prevSection);
             return;
         }
@@ -174,6 +177,12 @@ public class Sections {
     public void checkSectionDistance(final Section originalSection, final Section section) {
         if (originalSection.getDistance() <= section.getDistance()) {
             throw new SectionException(String.valueOf(SECTION_DISTANCE_LESS_THAN_EXISTING));
+        }
+    }
+
+    public void checkSectionDuration(final Section originalSection, final Section section) {
+        if (originalSection.getDuration() <= section.getDuration()) {
+            throw new SectionException(String.valueOf(SECTION_DURATION_LESS_THAN_EXISTING));
         }
     }
 
