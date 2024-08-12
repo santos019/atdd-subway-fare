@@ -85,11 +85,12 @@ public class PathStepDef implements En {
 
         });
 
-        Then("최소 시간 기준으로 {string} 경로가 조회된다", (String pathString) -> {
+        Then("최소 시간 {string} 시간 기준으로 {string} 경로가 조회된다", (String expectedDuration, String pathString) -> {
             List<String> split = List.of(pathString.split(","));
             PathResponse pathResponse = (PathResponse) context.store.get("path_duration");
             List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
             assertThat(actualPath).containsExactly(split.toArray(new String[0]));
+            assertThat(pathResponse.getWeight()).isEqualTo(Double.valueOf(expectedDuration));
         });
 
     }

@@ -8,26 +8,26 @@ import java.util.List;
 public class PathResponse {
 
     private List<StationResponse> stationResponses = new ArrayList<>();
-    private Double distance;
+    private Double weight;
 
     public PathResponse() {
     }
 
-    public PathResponse(List<StationResponse> stationResponses, Double distance) {
+    public PathResponse(List<StationResponse> stationResponses, Double weight) {
         this.stationResponses = stationResponses;
-        this.distance = distance;
+        this.weight = weight;
     }
 
-    public static PathResponse of(final List<StationResponse> stationResponses, final Double distance) {
-        return new PathResponse(stationResponses, distance);
+    public static PathResponse of(final List<StationResponse> stationResponses, final Double weight) {
+        return new PathResponse(stationResponses, weight);
     }
 
     public List<StationResponse> getStationResponses() {
         return stationResponses;
     }
 
-    public Double getDistance() {
-        return distance;
+    public Double getWeight() {
+        return weight;
     }
 
 }

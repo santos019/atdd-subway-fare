@@ -74,7 +74,7 @@ public class pathAcceptanceTest extends AcceptanceTest {
 
         // then
         assertThat(경로_조회_결과.getStationResponses()).isEqualTo(List.of(교대역, 남부터미널역, 양재역));
-        assertThat(경로_조회_결과.getDistance()).isEqualTo(5L);
+        assertThat(경로_조회_결과.getWeight()).isEqualTo(5L);
     }
 
     /* Given: 지하철 역과 지하철 노선이 등록되어 있고,

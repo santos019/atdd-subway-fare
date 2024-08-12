@@ -59,7 +59,7 @@ public class PathTest {
         // then
         assertAll(
                 () -> assertNotNull(pathResponse),
-                () -> assertEquals(pathWeight, pathResponse.getDistance()),
+                () -> assertEquals(pathWeight, pathResponse.getWeight()),
                 () -> assertEquals(List.of(
                         StationResponse.of(강남역.getId(), 강남역.getName()),
                         StationResponse.of(역삼역.getId(), 역삼역.getName())
