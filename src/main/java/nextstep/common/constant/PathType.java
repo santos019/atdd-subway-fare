@@ -1,12 +1,12 @@
 package nextstep.common.constant;
 
-public enum Type {
+public enum PathType {
     DISTANCE("distance"),
     DURATION("duration");
 
     private final String value;
 
-    Type(String value) {
+    PathType(String value) {
         this.value = value;
     }
 
@@ -14,8 +14,8 @@ public enum Type {
         return value;
     }
 
-    public static Type fromString(String value) {
-        for (Type type : Type.values()) {
+    public static PathType fromString(String value) {
+        for (PathType type : PathType.values()) {
             if (type.value.equalsIgnoreCase(value)) {
                 return type;
             }

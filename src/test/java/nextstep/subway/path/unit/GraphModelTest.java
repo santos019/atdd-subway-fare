@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static nextstep.common.constant.ErrorCode.PATH_NOT_FOUND;
-import static nextstep.common.constant.Type.DISTANCE;
-import static nextstep.common.constant.Type.DURATION;
+import static nextstep.common.constant.PathType.DISTANCE;
+import static nextstep.common.constant.PathType.DURATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -7,8 +7,6 @@ import nextstep.path.dto.PathResponse;
 
 import java.util.List;
 
-import static nextstep.common.constant.Type.DISTANCE;
-
 public class DijkstraShortestPathService implements PathService {
     @Override
     public PathResponse findPath(final String type, final Long source, final Long target, final List<Line> lineList) {
