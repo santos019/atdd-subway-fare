@@ -12,7 +12,7 @@ public class SectionRequest {
     @NotNull
     private Long duration;
 
-    public SectionRequest() {
+    private SectionRequest() {
     }
 
     public SectionRequest(Long upStationId, Long downStationId, Long distance, Long duration) {

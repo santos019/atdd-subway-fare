@@ -23,7 +23,7 @@ public class PathResponseTest {
         var distance = 20.0;
 
         // when
-        var pathResponse = new PathResponse().of(stationResponses, distance);
+        var pathResponse = PathResponse.of(stationResponses, distance);
 
         // then
         assertAll(

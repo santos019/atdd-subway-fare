@@ -23,7 +23,7 @@ public class Favorite {
     @JoinColumn(name = "memberId")
     private Member member;
 
-    public Favorite() {
+    private Favorite() {
     }
 
     public Favorite(Long id, Member member, Station sourceStation, Station targetStation) {

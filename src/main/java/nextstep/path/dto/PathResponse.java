@@ -10,7 +10,7 @@ public class PathResponse {
     private List<StationResponse> stationResponses = new ArrayList<>();
     private Double weight;
 
-    public PathResponse() {
+    private PathResponse() {
     }
 
     public PathResponse(List<StationResponse> stationResponses, Double weight) {

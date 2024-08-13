@@ -5,7 +5,7 @@ public class ModifyLineRequest {
     private String name;
     private String color;
 
-    public ModifyLineRequest() {
+    private ModifyLineRequest() {
     }
 
     public ModifyLineRequest(String name, String color) {

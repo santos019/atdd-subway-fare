@@ -14,7 +14,7 @@ public class SectionResponse {
 
     private Long distance;
 
-    public SectionResponse() {
+    private SectionResponse() {
     }
 
     public SectionResponse(Long lineId, Long sectionId, StationResponse upStationResponse, StationResponse downStationResponse, Long distance) {

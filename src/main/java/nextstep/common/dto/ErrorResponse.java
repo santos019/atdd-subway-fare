@@ -7,7 +7,7 @@ public class ErrorResponse {
     private String code;
     private String description;
 
-    public ErrorResponse () {}
+    private ErrorResponse () {}
 
     public ErrorResponse(ErrorCode collectedErrorResponse) {
         this.status = collectedErrorResponse.getStatus();
