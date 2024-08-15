@@ -277,7 +277,7 @@ public class GraphModelTest {
                 () -> assertTrue(graph.containsVertex(강남역.getId())),
                 () -> assertTrue(graph.containsVertex(역삼역.getId())),
                 () -> assertNotNull(edge),
-                () -> assertEquals(graph.getEdgeWeight(edge), 2.0),
+                () -> assertEquals((long) graph.getEdgeWeight(edge), 총_시간),
                 () -> assertTrue(graph.containsEdge(강남역.getId(), 역삼역.getId()))
         );
     }
