@@ -61,7 +61,7 @@ public class PathStepDef implements En {
             }
         });
 
-        When("{string}과 {string}의 경로를 조회하면", (String source, String target) -> {
+        When("{string}과 {string}의 경로를 최단 거리 기준으로 조회하면", (String source, String target) -> {
             Long sourceId = ((StationResponse) context.store.get(source)).getId();
             Long targetId = ((StationResponse) context.store.get(target)).getId();
 
@@ -69,11 +69,15 @@ public class PathStepDef implements En {
             context.store.put("path", pathResponse);
         });
 
-        Then("{string} 경로가 조회된다", (String pathString) -> {
+        Then("최단 거리 {string} 을 기준으로 {string} 경로가 조회된다", (String expectedDistance, String pathString) -> {
             List<String> split = List.of(pathString.split(","));
             PathResponse pathResponse = (PathResponse) context.store.get("path");
             List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
-            assertThat(actualPath).containsExactly(split.toArray(new String[0]));
+
+            assertAll(
+                    () -> assertThat(actualPath).containsExactly(split.toArray(new String[0])),
+                    () -> assertThat(pathResponse.getTotalDistance()).isEqualTo(Long.valueOf(expectedDistance))
+            );
         });
 
         When("{string}과 {string}의 경로를 최소 시간 기준으로 경로 조회하면", (String source, String target) -> {
@@ -81,20 +85,43 @@ public class PathStepDef implements En {
             StationResponse targetStation = (StationResponse) context.store.get(target);
 
             PathResponse pathResponse = 경로_조회_시간(sourceStation.getId(), targetStation.getId());
-            context.store.put("path_duration", pathResponse);
+            context.store.put("path", pathResponse);
         });
 
         Then("최소 시간 {string} 시간 기준으로 {string} 경로가 조회된다", (String expectedDuration, String pathString) -> {
             List<String> split = List.of(pathString.split(","));
-            PathResponse pathResponse = (PathResponse) context.store.get("path_duration");
+            PathResponse pathResponse = (PathResponse) context.store.get("path");
             List<String> actualPath = pathResponse.getStationResponses().stream().map(value -> value.getName()).collect(Collectors.toList());
 
             assertAll(
                     () -> assertThat(actualPath).containsExactly(split.toArray(new String[0])),
-                    () -> assertThat(pathResponse.getWeight()).isEqualTo(Double.valueOf(expectedDuration))
+                    () -> assertThat(pathResponse.getTotalDuration()).isEqualTo(Long.valueOf(expectedDuration))
             );
         });
 
+        And("총 거리 {string} 을 함께 응답한다", (String expectedDistance) -> {
+            PathResponse pathResponse = (PathResponse) context.store.get("path");
+
+            assertAll(
+                    () -> assertThat(pathResponse.getTotalDistance()).isEqualTo(Long.valueOf(expectedDistance))
+            );
+        });
+
+        And("총 소요 시간 {string} 을 함께 응답한다", (String totalDuration) -> {
+            PathResponse pathResponse = (PathResponse) context.store.get("path");
+
+            assertAll(
+                    () -> assertThat(pathResponse.getTotalDuration()).isEqualTo(Long.valueOf(totalDuration))
+            );
+        });
+
+        And("지하철 이용 요금 {string} 도 함께 응답한다", (String totalPrice) -> {
+            PathResponse pathResponse = (PathResponse) context.store.get("path");
+
+            assertAll(
+                    () -> assertThat(pathResponse.getTotalPrice()).isEqualTo(Long.valueOf(totalPrice))
+            );
+        });
     }
 }
 

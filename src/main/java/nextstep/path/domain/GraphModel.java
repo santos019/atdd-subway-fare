@@ -10,15 +10,15 @@ import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.WeightedMultigraph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static nextstep.common.constant.ErrorCode.PATH_DUPLICATE_STATION;
 import static nextstep.common.constant.ErrorCode.PATH_NOT_FOUND;
 
 public class GraphModel {
     private WeightedMultigraph<Long, DefaultWeightedEdge> graph;
+    private Map<DefaultWeightedEdge, Section> edgeToSectionMap = new HashMap<>();
     private Long source;
     private Long target;
 
@@ -63,7 +63,21 @@ public class GraphModel {
 
         List<Station> stations = getStations(lines, graphPath.getVertexList());
 
-        return Path.of(stations, graphPath.getWeight());
+        List<Section> sections = graphPath.getEdgeList().stream()
+                .map(edgeToSectionMap::get)
+                .collect(Collectors.toList());
+
+        Long totalDistance = sections.stream()
+                .mapToLong(Section::getDistance)
+                .sum();
+
+        Long totalDuration = sections.stream()
+                .mapToLong(Section::getDuration)
+                .sum();
+
+        Long totalPrice = calculateOverFare(totalDistance);
+
+        return Path.of(stations, totalDistance, totalDuration, totalPrice);
     }
 
     public List<Station> getStations(final List<Line> lines, final List<Long> stationIds) {
@@ -120,15 +134,17 @@ public class GraphModel {
         }
         for (Section section : sectionList) {
             Long weight = section.getWeight(type);
-            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), weight);
+            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), section, weight);
         }
     }
 
-    public void addEdge(final Long newSource, final Long newTarget, double weight) {
+    public void addEdge(final Long newSource, final Long newTarget, final Section section, double weight) {
         validateDuplicate(newSource, newTarget);
         graph.addVertex(newSource);
         graph.addVertex(newTarget);
-        graph.setEdgeWeight(graph.addEdge(newSource, newTarget), weight);
+        DefaultWeightedEdge defaultWeightedEdge = graph.addEdge(newSource, newTarget);
+        graph.setEdgeWeight(defaultWeightedEdge, weight);
+        edgeToSectionMap.put(defaultWeightedEdge, section);
     }
 
     public void containsVertex(final Long vertexId) {
@@ -145,6 +161,19 @@ public class GraphModel {
 
     public WeightedMultigraph<Long, DefaultWeightedEdge> getGraph() {
         return this.graph;
+    }
+
+    private Long calculateOverFare(final Long distance) {
+        if (distance <= 10) {
+            return 1250L;
+        }
+        int overFare = 5;
+
+        if (distance > 50) {
+            overFare = 8;
+        }
+
+        return (long) ((Math.ceil((distance - 11) / overFare) + 1) * 100) + 1250L;
     }
 }
 

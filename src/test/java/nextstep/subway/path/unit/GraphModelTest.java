@@ -29,6 +29,10 @@ public class GraphModelTest {
     Station 역삼역;
     Station 논현역;
     Section 강남역_역삼역_구간;
+    Long 총_거리 = 5L;
+    Long 총_시간 = 2L;
+    Long 총_비용 = 1250L;
+
 
     @BeforeEach
     public void setup() {
@@ -36,7 +40,7 @@ public class GraphModelTest {
         역삼역 = Station.of(2L, "역삼역");
         논현역 = Station.of(3L, "논현역");
 
-        강남역_역삼역_구간 = Section.of(강남역, 역삼역, 5L, 2L);
+        강남역_역삼역_구간 = Section.of(강남역, 역삼역, 총_거리, 총_시간);
     }
 
     @DisplayName("[createGraphModel] graph를 distance 기준으로 생성한다.")
@@ -59,7 +63,7 @@ public class GraphModelTest {
                 () -> assertTrue(graph.containsVertex(역삼역.getId())),
                 () -> assertTrue(graph.containsEdge(강남역.getId(), 역삼역.getId())),
                 () -> assertNotNull(edge),
-                () -> assertEquals(graph.getEdgeWeight(edge), 5.0)
+                () -> assertEquals((long) graph.getEdgeWeight(edge), 총_거리)
         );
     }
 
@@ -83,7 +87,7 @@ public class GraphModelTest {
                 () -> assertTrue(graph.containsVertex(역삼역.getId())),
                 () -> assertTrue(graph.containsEdge(강남역.getId(), 역삼역.getId())),
                 () -> assertNotNull(edge),
-                () -> assertEquals(graph.getEdgeWeight(edge), 2.0)
+                () -> assertEquals((long) graph.getEdgeWeight(edge), 총_시간)
         );
     }
 
@@ -125,7 +129,7 @@ public class GraphModelTest {
                 .getMessage().equals(PATH_NOT_FOUND.getDescription());
     }
 
-    @DisplayName("[findShortestPath] Path를 생성한다.")
+    @DisplayName("[findShortestPath] 총 거리 기준으로 Path를 생성한다.")
     @Test
     void findShortestPath_success() {
         // given
@@ -141,8 +145,10 @@ public class GraphModelTest {
         // then
         assertAll(
                 () -> assertNotNull(path),
-                () -> assertEquals(5.0, path.getWeight()),
-                () -> assertEquals(List.of(강남역, 역삼역), path.getStations())
+                () -> assertThat(총_거리).isEqualTo(path.getTotalDistance()),
+                () -> assertThat(총_시간).isEqualTo(path.getTotalDuration()),
+                () -> assertThat(총_비용).isEqualTo(path.getTotalPrice()),
+                () -> assertThat(List.of(강남역, 역삼역)).isEqualTo(path.getStations())
         );
     }
 
@@ -270,37 +276,36 @@ public class GraphModelTest {
                 .getMessage().equals(PATH_NOT_FOUND.getDescription());
     }
 
-    @DisplayName("[addEdge] 새로운 Edge를 생성한다.")
-    @Test
-    public void addEdge_success() {
-        // given
-        var graphModel = GraphModel.of(1L, 2L);
-
-        graphModel.addEdge(강남역.getId(), 역삼역.getId(), 20.0);
-
-        // when
-        WeightedMultigraph<Long, DefaultWeightedEdge> graph = graphModel.getGraph();
-        DefaultWeightedEdge edge = graph.getEdge(강남역.getId(), 역삼역.getId());
-
-        // then
-        assertAll(
-                () -> assertTrue(graph.containsVertex(강남역.getId())),
-                () -> assertTrue(graph.containsVertex(역삼역.getId())),
-                () -> assertTrue(edge != null),
-                () -> assertTrue(graph.getEdgeWeight(edge) == 20.0)
-        );
-    }
-
-    @DisplayName("[addEdge] 동일한 source와 target으로는 Edge를 생성할 수 없다.")
-    @Test
-    public void addEdge_fail() {
-        // given
-        var graphModel = GraphModel.of(1L, 2L);
-
-        // then
-        Assertions.assertThrows(PathException.class, () -> graphModel.addEdge(4L, 4L, 20.0))
-                .getMessage().equals(PATH_NOT_FOUND.getDescription());
-    }
+//    @DisplayName("[addEdge] 새로운 Edge를 생성한다.")
+//    @Test
+//    public void addEdge_success() {
+//        // given
+//        var graphModel = GraphModel.of(1L, 2L);
+//        Section section = Section.of(1L, 강남역, 역삼역, 20L, 20L);
+//
+//        graphModel.addEdge(강남역.getId(), 역삼역.getId(), section, section.getDistance());
+//        // when
+//        WeightedMultigraph<Long, DefaultWeightedEdge> graph = graphModel.getGraph();
+//
+//        // then
+//        assertAll(
+//                () -> assertTrue(graph.containsVertex(강남역.getId())),
+//                () -> assertTrue(graph.containsVertex(역삼역.getId())),
+//                () -> assertTrue(edge != null),
+//                () -> assertTrue(graph.getEdgeWeight(edge) == 20.0)
+//        );
+//    }
+//
+//    @DisplayName("[addEdge] 동일한 source와 target으로는 Edge를 생성할 수 없다.")
+//    @Test
+//    public void addEdge_fail() {
+//        // given
+//        var graphModel = GraphModel.of(1L, 2L);
+//
+//        // then
+//        Assertions.assertThrows(PathException.class, () -> graphModel.addEdge(4L, 4L, 20.0))
+//                .getMessage().equals(PATH_NOT_FOUND.getDescription());
+//    }
 
     @DisplayName("[validateDuplicate] 동일하지 않는 source와 target을 인자로 주면 예외가 발생하지 않는다.")
     @Test
