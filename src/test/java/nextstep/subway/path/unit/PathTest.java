@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static nextstep.common.constant.ErrorCode.PATH_NOT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PathTest {
@@ -38,8 +39,7 @@ public class PathTest {
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L, 5L);
         구간들 = new Sections(Collections.singletonList(강남역_역삼역_구간));
         신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들);
-        path = Path.of(List.of(강남역, 역삼역), 총_거리, 총_시간, 총_비용);
-
+        path = Path.of(List.of(강남역, 역삼역), 총_거리, 총_시간);
     }
 
     @DisplayName("getVertexList와 getWeight의 정상 동작을 확인한다.")
@@ -77,12 +77,55 @@ public class PathTest {
     @Test
     void createPathResponse_fail1() {
         // given
-        var path = Path.of(List.of(), 총_거리, 총_시간, 총_비용);
+        var path = Path.of(List.of(), 총_거리, 총_시간);
 
         // when & then
         assertThrows(PathException.class, () -> path.createPathResponse())
                 .getMessage().equals(PATH_NOT_FOUND.getDescription());
     }
 
+    @DisplayName("[calculateOverFare] distance가 0일 때, 1250원을 반환한다.")
+    @Test
+    void calculateOverFare_0() {
+        var 거리 = 10L;
+        var 예상_요금 = 1250L;
+        var 요금 = Path.calculateOverFare(거리);
+        assertAll(
+                () -> assertThat(요금).isEqualTo(예상_요금)
+        );
+    }
+
+    @DisplayName("[calculateOverFare] distance가 11일 때, 1350원을 반환한다.")
+    @Test
+    void calculateOverFare_11() {
+        var 거리 = 11L;
+        var 예상_요금 = 1350L;
+        var 요금 = Path.calculateOverFare(거리);
+        assertAll(
+                () -> assertThat(요금).isEqualTo(예상_요금)
+        );
+    }
+
+    @DisplayName("[calculateOverFare] distance가 21일 때, 1550원을 반환한다.")
+    @Test
+    void calculateOverFare_21() {
+        var 거리 = 21L;
+        var 예상_요금 = 1550L;
+        var 요금 = Path.calculateOverFare(거리);
+        assertAll(
+                () -> assertThat(요금).isEqualTo(예상_요금)
+        );
+    }
+
+    @DisplayName("[calculateOverFare] distance가 51일 때, 1850원을 반환한다.")
+    @Test
+    void calculateOverFare_51() {
+        var 거리 = 51L;
+        var 예상_요금 = 1850L;
+        var 요금 = Path.calculateOverFare(거리);
+        assertAll(
+                () -> assertThat(요금).isEqualTo(예상_요금)
+        );
+    }
 }
 
