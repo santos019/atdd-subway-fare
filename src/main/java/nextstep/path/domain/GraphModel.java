@@ -90,6 +90,7 @@ public class GraphModel {
         }
 
         return graphPath;
+
     }
 
     public List<Station> getStations(final List<Line> lines, final List<Long> stationIds) {

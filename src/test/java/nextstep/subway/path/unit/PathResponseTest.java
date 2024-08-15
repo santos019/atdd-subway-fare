@@ -35,6 +35,5 @@ public class PathResponseTest {
                 () -> assertEquals(총_비용, pathResponse.getTotalPrice())
         );
     }
-
 }
 

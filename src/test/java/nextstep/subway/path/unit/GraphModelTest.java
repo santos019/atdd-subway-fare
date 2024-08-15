@@ -35,7 +35,6 @@ public class GraphModelTest {
     Long 총_시간 = 10L;
     Long 총_비용 = 1250L;
 
-
     @BeforeEach
     public void setup() {
         강남역 = Station.of(1L, "강남역");
@@ -43,7 +42,6 @@ public class GraphModelTest {
         논현역 = Station.of(3L, "논현역");
 
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 총_거리, 총_시간);
-
     }
 
     @DisplayName("[createGraphModel] graph를 distance 기준으로 생성한다.")
@@ -315,8 +313,8 @@ public class GraphModelTest {
         // given
         var graphModel = GraphModel.of(1L, 2L);
         Section section = Section.of(1L, 강남역, 역삼역, 총_거리, 총_시간);
-
         graphModel.addEdge(강남역.getId(), 역삼역.getId(), section, DISTANCE.getValue());
+
         // when
         WeightedMultigraph<Long, DefaultWeightedEdge> graph = graphModel.getGraph();
         DefaultWeightedEdge edge = graph.getEdge(강남역.getId(), 역삼역.getId());
@@ -430,6 +428,5 @@ public class GraphModelTest {
         assertThrows(PathException.class, () -> graphModel.getStation(List.of(), 3L))
                 .getMessage().equals(PATH_NOT_FOUND.getDescription());
     }
-
 }
 

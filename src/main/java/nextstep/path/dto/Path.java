@@ -52,6 +52,7 @@ public class Path {
         }
 
         return PathResponse.of(stationResponses, totalDistance, totalDuration, totalPrice);
+
     }
 
     public List<Station> getStations() {
@@ -69,5 +70,6 @@ public class Path {
     public Long getTotalPrice() {
         return totalPrice;
     }
+
 }
 

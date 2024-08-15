@@ -12,6 +12,7 @@ import static nextstep.common.constant.ErrorCode.*;
 import static nextstep.common.constant.PathType.DISTANCE;
 import static nextstep.common.constant.PathType.DURATION;
 
+
 @Entity
 public class Section {
     @Id

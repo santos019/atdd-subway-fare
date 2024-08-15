@@ -6,6 +6,7 @@ public class StationResponse {
     private Long id;
     private String name;
 
+
     private StationResponse() {
     }
 
