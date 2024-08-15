@@ -23,8 +23,22 @@ public class Path {
         this.totalPrice = totalPrice;
     }
 
-    public static Path of(final List<Station> stations, final Long totalDistance, final Long totalDuration, final Long totalPrice) {
-        return new Path(stations, totalDistance, totalDuration, totalPrice);
+    public static Path of(final List<Station> stations, final Long totalDistance, final Long totalDuration) {
+
+        return new Path(stations, totalDistance, totalDuration, calculateOverFare(totalDistance));
+    }
+
+    public static Long calculateOverFare(final Long distance) {
+        if (distance <= 10) {
+            return 1250L;
+        }
+        int overFare = 5;
+
+        if (distance > 50) {
+            overFare = 8;
+        }
+
+        return (long) ((Math.ceil((distance - 11) / overFare) + 1) * 100) + 1250L;
     }
 
     public PathResponse createPathResponse() {

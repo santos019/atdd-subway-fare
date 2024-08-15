@@ -35,7 +35,13 @@ public class GraphModel {
 
     public Path findPath(final List<Line> lines, final String type) {
         createGraphModel(lines, type);
-        return findShortestPath(lines);
+        GraphPath<Long, DefaultWeightedEdge> graphPath = findShortestPath();
+        List<Station> stations = getStations(lines, graphPath.getVertexList());
+        List<Section> sections = getSections(graphPath.getEdgeList());
+        Long totalDistance = getTotalDistance(sections);
+        Long totalDuration = getTotalDuration(sections);
+
+        return Path.of(stations, totalDistance, totalDuration);
     }
 
     public void createGraphModel(final List<Line> lines, final String type) {
@@ -51,7 +57,29 @@ public class GraphModel {
         containsVertex(target);
     }
 
-    private Path findShortestPath(final List<Line> lines) {
+    public void addSectionsToGraph(final Line line, final String type) {
+        List<Section> sectionList = line.getSections().getSections();
+
+        if (sectionList.isEmpty()) {
+            throw new PathException(String.valueOf(PATH_NOT_FOUND));
+        }
+        for (Section section : sectionList) {
+            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), section, type);
+        }
+    }
+
+    public void addEdge(final Long newSource, final Long newTarget, final Section section, final String type) {
+        validateDuplicate(newSource, newTarget);
+        double weight = section.getWeight(type);
+
+        graph.addVertex(newSource);
+        graph.addVertex(newTarget);
+        DefaultWeightedEdge defaultWeightedEdge = graph.addEdge(newSource, newTarget);
+        graph.setEdgeWeight(defaultWeightedEdge, weight);
+        edgeToSectionMap.put(defaultWeightedEdge, section);
+    }
+
+    private GraphPath<Long, DefaultWeightedEdge> findShortestPath() {
         validateDuplicate(source, target);
         DijkstraShortestPath<Long, DefaultWeightedEdge> shortestPath =
                 new DijkstraShortestPath<>(graph);
@@ -61,23 +89,7 @@ public class GraphModel {
             throw new PathException(String.valueOf(PATH_NOT_FOUND));
         }
 
-        List<Station> stations = getStations(lines, graphPath.getVertexList());
-
-        List<Section> sections = graphPath.getEdgeList().stream()
-                .map(edgeToSectionMap::get)
-                .collect(Collectors.toList());
-
-        Long totalDistance = sections.stream()
-                .mapToLong(Section::getDistance)
-                .sum();
-
-        Long totalDuration = sections.stream()
-                .mapToLong(Section::getDuration)
-                .sum();
-
-        Long totalPrice = calculateOverFare(totalDistance);
-
-        return Path.of(stations, totalDistance, totalDuration, totalPrice);
+        return graphPath;
     }
 
     public List<Station> getStations(final List<Line> lines, final List<Long> stationIds) {
@@ -88,6 +100,24 @@ public class GraphModel {
         }
 
         return stationList;
+    }
+
+    private List<Section> getSections(List<DefaultWeightedEdge> defaultWeightedEdges) {
+        return defaultWeightedEdges.stream()
+                .map(edgeToSectionMap::get)
+                .collect(Collectors.toList());
+    }
+
+    private Long getTotalDistance(List<Section> sections) {
+        return sections.stream()
+                .mapToLong(Section::getDistance)
+                .sum();
+    }
+
+    private Long getTotalDuration(List<Section> sections) {
+        return sections.stream()
+                .mapToLong(Section::getDuration)
+                .sum();
     }
 
     public Station getStation(final List<Line> lines, final Long stationId) {
@@ -126,27 +156,6 @@ public class GraphModel {
         return Optional.empty();
     }
 
-    public void addSectionsToGraph(final Line line, final String type) {
-        List<Section> sectionList = line.getSections().getSections();
-
-        if (sectionList.isEmpty()) {
-            throw new PathException(String.valueOf(PATH_NOT_FOUND));
-        }
-        for (Section section : sectionList) {
-            Long weight = section.getWeight(type);
-            addEdge(section.getUpStation().getId(), section.getDownStation().getId(), section, weight);
-        }
-    }
-
-    public void addEdge(final Long newSource, final Long newTarget, final Section section, double weight) {
-        validateDuplicate(newSource, newTarget);
-        graph.addVertex(newSource);
-        graph.addVertex(newTarget);
-        DefaultWeightedEdge defaultWeightedEdge = graph.addEdge(newSource, newTarget);
-        graph.setEdgeWeight(defaultWeightedEdge, weight);
-        edgeToSectionMap.put(defaultWeightedEdge, section);
-    }
-
     public void containsVertex(final Long vertexId) {
         if (!graph.containsVertex(vertexId)) {
             throw new PathException(String.valueOf(PATH_NOT_FOUND));
@@ -161,19 +170,6 @@ public class GraphModel {
 
     public WeightedMultigraph<Long, DefaultWeightedEdge> getGraph() {
         return this.graph;
-    }
-
-    private Long calculateOverFare(final Long distance) {
-        if (distance <= 10) {
-            return 1250L;
-        }
-        int overFare = 5;
-
-        if (distance > 50) {
-            overFare = 8;
-        }
-
-        return (long) ((Math.ceil((distance - 11) / overFare) + 1) * 100) + 1250L;
     }
 }
 
