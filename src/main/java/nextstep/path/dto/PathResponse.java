@@ -8,27 +8,38 @@ import java.util.List;
 public class PathResponse {
 
     private List<StationResponse> stationResponses = new ArrayList<>();
-    private Double weight;
+    private Long totalDistance;
+    private Long totalDuration;
+    private Long totalPrice;
 
-    public PathResponse() {
+    private PathResponse() {
     }
 
-    public PathResponse(List<StationResponse> stationResponses, Double weight) {
+    public PathResponse(final List<StationResponse> stationResponses, final Long totalDistance, final Long totalDuration, final Long totalPrice) {
         this.stationResponses = stationResponses;
-        this.weight = weight;
+        this.totalDistance = totalDistance;
+        this.totalDuration = totalDuration;
+        this.totalPrice = totalPrice;
     }
 
-    public static PathResponse of(final List<StationResponse> stationResponses, final Double weight) {
-        return new PathResponse(stationResponses, weight);
+    public static PathResponse of(final List<StationResponse> stationResponses, final Long totalDistance, final Long totalDuration, final Long totalPrice) {
+        return new PathResponse(stationResponses, totalDistance, totalDuration, totalPrice);
     }
 
     public List<StationResponse> getStationResponses() {
         return stationResponses;
     }
 
-    public Double getWeight() {
-        return weight;
+    public Long getTotalDistance() {
+        return totalDistance;
     }
 
+    public Long getTotalDuration() {
+        return totalDuration;
+    }
+
+    public Long getTotalPrice() {
+        return totalPrice;
+    }
 }
 

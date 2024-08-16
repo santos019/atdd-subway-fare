@@ -18,7 +18,7 @@ public class CreateLineRequest {
     @NotNull
     private Long duration;
 
-    public CreateLineRequest() {
+    protected CreateLineRequest() {
     }
 
     public CreateLineRequest(String name, String color, Long upStationId, Long downStationId, Long distance, Long duration) {

@@ -20,17 +20,20 @@ public class PathResponseTest {
                 StationResponse.of(1L, "Station1"),
                 StationResponse.of(2L, "Station2")
         );
-        var distance = 20.0;
+        var 총_거리 = 20L;
+        var 총_시간 = 10L;
+        var 총_비용 = 1250L;
 
         // when
-        var pathResponse = new PathResponse().of(stationResponses, distance);
+        var pathResponse = PathResponse.of(stationResponses, 총_거리, 총_시간, 총_비용);
 
         // then
         assertAll(
                 () -> assertEquals(stationResponses, pathResponse.getStationResponses()),
-                () -> assertEquals(distance, pathResponse.getWeight())
+                () -> assertEquals(총_거리, pathResponse.getTotalDistance()),
+                () -> assertEquals(총_시간, pathResponse.getTotalDuration()),
+                () -> assertEquals(총_비용, pathResponse.getTotalPrice())
         );
-
     }
 }
 

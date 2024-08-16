@@ -11,15 +11,34 @@ import static nextstep.common.constant.ErrorCode.PATH_NOT_FOUND;
 
 public class Path {
     private final List<Station> stations;
-    private final double weight;
+    private final Long totalDistance;
+    private final Long totalDuration;
+    private final Long totalPrice;
 
-    public Path(List<Station> stations, double weight) {
+
+    public Path(List<Station> stations, Long totalDistance, Long totalDuration, Long totalPrice) {
         this.stations = stations;
-        this.weight = weight;
+        this.totalDistance = totalDistance;
+        this.totalDuration = totalDuration;
+        this.totalPrice = totalPrice;
     }
 
-    public static Path of(final List<Station> stations, final double weight) {
-        return new Path(stations, weight);
+    public static Path of(final List<Station> stations, final Long totalDistance, final Long totalDuration) {
+
+        return new Path(stations, totalDistance, totalDuration, calculateOverFare(totalDistance));
+    }
+
+    public static Long calculateOverFare(final Long distance) {
+        if (distance <= 10) {
+            return 1250L;
+        }
+        int overFare = 5;
+
+        if (distance > 50) {
+            overFare = 8;
+        }
+
+        return (long) ((Math.ceil((distance - 11) / overFare) + 1) * 100) + 1250L;
     }
 
     public PathResponse createPathResponse() {
@@ -32,15 +51,24 @@ public class Path {
             stationResponses.add(StationResponse.of(station.getId(), station.getName()));
         }
 
-        return PathResponse.of(stationResponses, weight);
+        return PathResponse.of(stationResponses, totalDistance, totalDuration, totalPrice);
+
     }
 
     public List<Station> getStations() {
         return stations;
     }
 
-    public double getWeight() {
-        return weight;
+    public Long getTotalDistance() {
+        return totalDistance;
+    }
+
+    public Long getTotalDuration() {
+        return totalDuration;
+    }
+
+    public Long getTotalPrice() {
+        return totalPrice;
     }
 
 }

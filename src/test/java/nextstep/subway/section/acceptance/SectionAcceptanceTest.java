@@ -72,7 +72,7 @@ public class SectionAcceptanceTest extends AcceptanceTest {
         지하철_구간_등록(신분당선.getId(), SectionRequest.of(선릉역.getId(), 삼성역.getId(), 10L, 5L));
 
         // when
-        지하철_구간_등록(신분당선.getId(), SectionRequest.of(선릉역.getId(), 언주역.getId(), 4L, 5L));
+        지하철_구간_등록(신분당선.getId(), SectionRequest.of(선릉역.getId(), 언주역.getId(), 4L, 4L));
         var 구간이_등록된_신분당선 = 지하철_노선_조회(신분당선.getId());
 
         // then

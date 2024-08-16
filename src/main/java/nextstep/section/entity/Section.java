@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static nextstep.common.constant.ErrorCode.*;
-import static nextstep.common.constant.Type.DISTANCE;
-import static nextstep.common.constant.Type.DURATION;
+import static nextstep.common.constant.PathType.DISTANCE;
+import static nextstep.common.constant.PathType.DURATION;
+
 
 @Entity
 public class Section {

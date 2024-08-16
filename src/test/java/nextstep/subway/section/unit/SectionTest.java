@@ -9,8 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static nextstep.common.constant.ErrorCode.*;
-import static nextstep.common.constant.Type.DISTANCE;
-import static nextstep.common.constant.Type.DURATION;
+import static nextstep.common.constant.PathType.DISTANCE;
+import static nextstep.common.constant.PathType.DURATION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 

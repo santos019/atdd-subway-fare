@@ -14,7 +14,7 @@ public class LineResponse {
     private Long distance;
     private List<StationResponse> stations = new ArrayList<>();
 
-    public LineResponse() {
+    private LineResponse() {
     }
 
     public LineResponse(Long id, String name, String color, Long distance, List<StationResponse> stations) {
