@@ -39,10 +39,8 @@ public class GraphModel {
         GraphPath<Long, DefaultWeightedEdge> graphPath = findShortestPath();
         List<Station> stations = getStations(lines, graphPath.getVertexList());
         Sections sections = getSections(graphPath.getEdgeList());
-        Long totalDistance = sections.getTotalDistance();
-        Long totalDuration = sections.getTotalDuration();
 
-        return Path.of(stations, totalDistance, totalDuration);
+        return Path.of(stations, sections);
     }
 
     public void createGraphModel(final List<Line> lines, final String type) {

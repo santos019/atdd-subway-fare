@@ -39,7 +39,7 @@ public class PathTest {
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L, 5L);
         구간들 = new Sections(Collections.singletonList(강남역_역삼역_구간));
         신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들);
-        path = Path.of(List.of(강남역, 역삼역), 총_거리, 총_시간);
+        path = Path.of(List.of(강남역, 역삼역), 구간들);
     }
 
     @DisplayName("getVertexList와 getWeight의 정상 동작을 확인한다.")
@@ -77,7 +77,7 @@ public class PathTest {
     @Test
     void createPathResponse_fail1() {
         // given
-        var path = Path.of(List.of(), 총_거리, 총_시간);
+        var path = Path.of(List.of(), 구간들);
 
         // when & then
         assertThrows(PathException.class, () -> path.createPathResponse())

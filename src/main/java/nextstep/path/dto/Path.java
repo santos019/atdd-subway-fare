@@ -1,6 +1,7 @@
 package nextstep.path.dto;
 
 import nextstep.path.exception.PathException;
+import nextstep.section.entity.Sections;
 import nextstep.station.dto.StationResponse;
 import nextstep.station.entity.Station;
 
@@ -23,8 +24,9 @@ public class Path {
         this.totalPrice = totalPrice;
     }
 
-    public static Path of(final List<Station> stations, final Long totalDistance, final Long totalDuration) {
-
+    public static Path of(final List<Station> stations, final Sections sections) {
+        Long totalDistance = sections.getTotalDistance();
+        Long totalDuration = sections.getTotalDuration();
         return new Path(stations, totalDistance, totalDuration, calculateOverFare(totalDistance));
     }
 
