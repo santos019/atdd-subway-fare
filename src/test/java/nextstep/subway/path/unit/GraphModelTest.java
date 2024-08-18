@@ -36,12 +36,14 @@ public class GraphModelTest {
     GraphModel 그래프_기본_모델;
     List<Line> 지하철_리스트;
 
+    Long 기본_노선_추가요금 = 0L;
     Long 신분당선_기본_거리 = 15L;
     Long 총_거리 = 5L;
     Long 총_시간 = 10L;
     Long 총_비용 = 1250L;
 
     Member 로그인_사용자_비할인대상;
+
 
     @BeforeEach
     public void setup() {
@@ -52,7 +54,7 @@ public class GraphModelTest {
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 총_거리, 총_시간);
 
         구간들 = new Sections(List.of(강남역_역삼역_구간));
-        신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들);
+        신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들, 기본_노선_추가요금);
 
         그래프_기본_모델 = GraphModel.of(1L, 2L);
 
@@ -105,7 +107,7 @@ public class GraphModelTest {
         // given
         var 강남역_강남역_구간 = Section.of(강남역, 강남역, 5L, 5L);
         var 구간들 = new Sections(List.of(강남역_강남역_구간));
-        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들);
+        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들, 기본_노선_추가요금);
 
         // when & then
         Assertions.assertThrows(PathException.class, () -> 그래프_기본_모델.createGraphModel(Collections.singletonList(신분당선), DISTANCE.getValue()))
@@ -125,7 +127,7 @@ public class GraphModelTest {
     void createGraphModel_fail3() {
         // given
         var 구간들 = new Sections(List.of());
-        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들);
+        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들, 기본_노선_추가요금);
 
         // when & then
         Assertions.assertThrows(PathException.class, () -> 그래프_기본_모델.createGraphModel(Collections.singletonList(신분당선), DISTANCE.getValue()))
@@ -163,7 +165,7 @@ public class GraphModelTest {
         var 강남역_논현역_구간 = Section.of(강남역, 논현역, 강남역_논현역_구간_거리, 강남역_논현역_구간_시간);
         var 논현역_역삼역_구간 = Section.of(논현역, 역삼역, 논현역_역삼역_구간_거리, 논현역_역삼역_구간_시간);
         var 구간들 = new Sections(List.of(강남역_역삼역_구간, 강남역_논현역_구간, 논현역_역삼역_구간));
-        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들);
+        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들, 기본_노선_추가요금);
         지하철_리스트 = Collections.singletonList(신분당선);
         그래프_기본_모델.createGraphModel(지하철_리스트, DURATION.getValue());
 
@@ -256,7 +258,7 @@ public class GraphModelTest {
     public void addSectionsToGraph_fail() {
         // given
         var 빈_구간들 = new Sections(List.of());
-        var 빈_구간을_가진_신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 빈_구간들);
+        var 빈_구간을_가진_신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 빈_구간들, 기본_노선_추가요금);
         GraphModel graphModel = GraphModel.of(1L, 2L);
 
         // when & then
@@ -270,7 +272,7 @@ public class GraphModelTest {
         // given
         var 강남역_강남역_구간 = Section.of(강남역, 강남역, 5L, 5L);
         var 구간들 = new Sections(List.of(강남역_강남역_구간));
-        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들);
+        var 신분당선 = Line.of(1L, "신분당선", "red", 신분당선_기본_거리, 구간들, 기본_노선_추가요금);
         var graphModel = GraphModel.of(1L, 2L);
 
         // when & then

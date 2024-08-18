@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static nextstep.common.constant.ErrorCode.UNAUTHORIZED_ACCESS;
 import static nextstep.common.constant.PathType.DISTANCE;
@@ -37,7 +38,7 @@ public class FavoriteService {
     @Transactional
     public Long createFavorite(final LoginMember loginMember, final FavoriteRequest favoriteRequest) {
         Member member = memberService.findMemberByEmail(loginMember.getEmail());
-        pathFinder.retrieveStationPath(null, DISTANCE.getValue(), favoriteRequest.getSource(), favoriteRequest.getTarget());
+        pathFinder.retrieveStationPath(Optional.ofNullable(null), DISTANCE.getValue(), favoriteRequest.getSource(), favoriteRequest.getTarget());
         Station sourceStation = stationService.getStationByIdOrThrow(favoriteRequest.getSource());
         Station targetStation = stationService.getStationByIdOrThrow(favoriteRequest.getTarget());
         Favorite favorite = Favorite.of(member, sourceStation, targetStation);

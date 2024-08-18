@@ -45,6 +45,7 @@ public class Path {
         long additionalFare = 0;
         for (Section section : sections.getSections()) {
             for (Line line : lines) {
+                if(line.getAdditionalFare() == 0) continue;
                 if (line.hasSection(section)) {
                     if (additionalFare < line.getAdditionalFare()) {
                         additionalFare = line.getAdditionalFare();
@@ -62,22 +63,22 @@ public class Path {
 
         int age = member.getAge();
 
-        int discountPercent = getDiscountPercent(age);
+        double discountPercent = getDiscountPercent(age);
 
         if (totalPrice < MINIMUM_PRICE_FOR_DISCOUNT) {
             return totalPrice;
         }
 
-        long discountAmount = (totalPrice * discountPercent) / 100;
+        long discountAmount = (long) (((totalPrice - 350) * discountPercent));
         return totalPrice - discountAmount;
     }
 
-    private static int getDiscountPercent(final int age) {
+    private static double getDiscountPercent(final int age) {
         if (age >= MIN_AGE_FOR_DISCOUNT && age <= MAX_AGE_FOR_DISCOUNT) {
             if (age < 13) {
-                return DISCOUNT_PERCENT_CHILD;
+                return DISCOUNT_PERCENT_CHILD * 0.01;
             }
-            return DISCOUNT_PERCENT_ADULT;
+            return DISCOUNT_PERCENT_ADULT * 0.01;
         }
         return 0;
     }

@@ -1,5 +1,6 @@
 package nextstep.station.controller;
 
+import nextstep.auth.ui.AuthenticationLogin;
 import nextstep.auth.ui.AuthenticationPrincipal;
 import nextstep.member.domain.LoginMember;
 import nextstep.path.service.PathFinder;
@@ -43,7 +44,7 @@ public class StationController {
 
     @GetMapping("/paths")
     public ResponseEntity<Object> retrieveStationPath(
-            @AuthenticationPrincipal Optional<LoginMember> loginMember,
+            @AuthenticationLogin Optional<LoginMember> loginMember,
             @RequestParam("source") Long source,
             @RequestParam("target") Long target,
             @RequestParam("type") String type) {

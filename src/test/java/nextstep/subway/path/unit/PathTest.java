@@ -28,6 +28,7 @@ public class PathTest {
     Line 신분당선;
     Path path;
 
+    Long 기본_노선_추가요금 = 0L;
     Long 총_거리 = 10L;
     Long 총_시간 = 5L;
     Long 총_비용 = 1250L;
@@ -41,7 +42,7 @@ public class PathTest {
 
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L, 5L);
         구간들 = new Sections(Collections.singletonList(강남역_역삼역_구간));
-        신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들);
+        신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들, 기본_노선_추가요금);
 
         로그인_사용자_비할인대상 = Member.of(1L, "test@test.com", "password", 20);
 

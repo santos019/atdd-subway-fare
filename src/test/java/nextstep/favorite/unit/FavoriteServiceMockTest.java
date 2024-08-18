@@ -74,6 +74,8 @@ public class FavoriteServiceMockTest {
     private Member 사용자;
     private LoginMember 로그인멤버;
 
+    private Long 기본_노선_추가요금 = 0L;
+
     @BeforeEach
     public void setup() {
         stationService = new StationService(stationRepository, lineService);
@@ -89,7 +91,7 @@ public class FavoriteServiceMockTest {
 
         강남역_역삼역_구간 = Section.of(1L, 강남역, 역삼역, 1L, 5L);
         신분당선_구간.addSection(강남역_역삼역_구간);
-        신분당선 = Line.of(1L, "신분당선", "Red", 10L, 신분당선_구간);
+        신분당선 = Line.of(1L, "신분당선", "Red", 10L, 신분당선_구간, 기본_노선_추가요금);
 
         사용자 = Member.of(1L, EMAIL, PASSWORD, AGE);
         로그인멤버 = new LoginMember(EMAIL);

@@ -30,20 +30,21 @@ public class Line {
     protected Line() {
     }
 
-    public Line(Long id, String name, String color, Long distance, Sections sections) {
+    public Line(Long id, String name, String color, Long distance, Sections sections, Long additionalFare) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.distance = distance;
         this.sections = sections;
+        this.additionalFare = additionalFare;
     }
 
-    public static Line of(final String name, final String color, final Long distance, final Sections sections) {
-        return new Line(null, name, color, distance, sections);
+    public static Line of(final String name, final String color, final Long distance, final Sections sections, final Long additionalFare) {
+        return new Line(null, name, color, distance, sections, additionalFare);
     }
 
-    public static Line of(final Long id, final String name, final String color, final Long distance, final Sections sections) {
-        return new Line(id, name, color, distance, sections);
+    public static Line of(final Long id, final String name, final String color, final Long distance, final Sections sections, final Long additionalFare) {
+        return new Line(id, name, color, distance, sections, additionalFare);
     }
 
     public void changeColor(final String color) {
