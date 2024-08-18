@@ -59,7 +59,6 @@ public class PathTest {
         path_로그인_8세 = Path.of(로그인_사용자_8세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
         path_로그인_18세 = Path.of(로그인_사용자_18세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
         path_로그인_20세 = Path.of(로그인_사용자_20세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
-
     }
 
     @DisplayName("getVertexList와 getWeight의 정상 동작을 확인한다.")

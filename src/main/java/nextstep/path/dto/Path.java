@@ -129,6 +129,5 @@ public class Path {
     public Long getTotalPrice() {
         return totalPrice;
     }
-
 }
 
