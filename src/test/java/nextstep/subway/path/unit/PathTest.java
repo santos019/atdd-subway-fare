@@ -26,7 +26,10 @@ public class PathTest {
     Section 강남역_역삼역_구간;
     Sections 구간들;
     Line 신분당선;
-    Path path;
+    Path path_비로그인;
+    Path path_로그인_8세;
+    Path path_로그인_18세;
+    Path path_로그인_20세;
 
     Long 기본_노선_추가요금 = 0L;
     Long 총_거리 = 10L;
@@ -34,6 +37,9 @@ public class PathTest {
     Long 총_비용 = 1250L;
 
     Member 로그인_사용자_비할인대상;
+    Member 로그인_사용자_8세;
+    Member 로그인_사용자_18세;
+    Member 로그인_사용자_20세;
 
     @BeforeEach
     public void setup() {
@@ -45,8 +51,15 @@ public class PathTest {
         신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들, 기본_노선_추가요금);
 
         로그인_사용자_비할인대상 = Member.of(1L, "test@test.com", "password", 20);
+        로그인_사용자_8세 = Member.of(1L, "test@test.com", "password", 8);
+        로그인_사용자_18세 = Member.of(1L, "test@test.com", "password", 18);
+        로그인_사용자_20세 = Member.of(1L, "test@test.com", "password", 20);
 
-        path = Path.of(로그인_사용자_비할인대상, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
+        path_비로그인 = Path.of(null, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
+        path_로그인_8세 = Path.of(로그인_사용자_8세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
+        path_로그인_18세 = Path.of(로그인_사용자_18세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
+        path_로그인_20세 = Path.of(로그인_사용자_20세, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
+
     }
 
     @DisplayName("getVertexList와 getWeight의 정상 동작을 확인한다.")
@@ -54,10 +67,10 @@ public class PathTest {
     public void getVertexList_getWeight() {
         // then
         assertAll(
-                () -> assertEquals(List.of(강남역, 역삼역), path.getStations()),
-                () -> assertEquals(총_거리, path.getTotalDistance()),
-                () -> assertEquals(총_시간, path.getTotalDuration()),
-                () -> assertEquals(총_비용, path.getTotalPrice())
+                () -> assertEquals(List.of(강남역, 역삼역), path_비로그인.getStations()),
+                () -> assertEquals(총_거리, path_비로그인.getTotalDistance()),
+                () -> assertEquals(총_시간, path_비로그인.getTotalDuration()),
+                () -> assertEquals(총_비용, path_비로그인.getTotalPrice())
         );
     }
 
@@ -65,7 +78,7 @@ public class PathTest {
     @Test
     void createPathResponse_success() {
         // when
-        var pathResponse = path.createPathResponse();
+        var pathResponse = path_비로그인.createPathResponse();
 
         // then
         assertAll(
@@ -132,6 +145,91 @@ public class PathTest {
         var 요금 = Path.calculateOverFare(거리);
         assertAll(
                 () -> assertThat(요금).isEqualTo(예상_요금)
+        );
+    }
+
+    @DisplayName("[calculateLineAdditionalFare] 신분당선을 이용할 경우 500원이 추가된다.")
+    @Test
+    void calculateLineAdditionalFare_500() {
+        // when
+        신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들, 500L);
+        var 추가요금이_계산된_요금 = Path.calculateLineAdditionalFare(List.of(신분당선), 구간들, 0L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(500L)
+        );
+    }
+
+    @DisplayName("[calculateLineAdditionalFare] 신분당선을 이용할 경우 추가요금이 없다.")
+    @Test
+    void calculateLineAdditionalFare_0() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateLineAdditionalFare(List.of(신분당선), 구간들, 0L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(0L)
+        );
+    }
+
+    @DisplayName("[calculateMemberAge] 비로그인 유저는 할인을 받지 않는다.")
+    @Test
+    void calculateMemberAge_0() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateMemberAge(null, 0L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(0L)
+        );
+    }
+
+    @DisplayName("[calculateMemberAge] 8세 로그인 유저는 할인을 받는다.")
+    @Test
+    void calculateMemberAge_8() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateMemberAge(로그인_사용자_8세, 1500L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(925L)
+        );
+    }
+
+    @DisplayName("[calculateMemberAge] 18세 로그인 유저는 할인을 받는다.")
+    @Test
+    void calculateMemberAge_18() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateMemberAge(로그인_사용자_18세, 1500L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(1270L)
+        );
+    }
+
+    @DisplayName("[calculateMemberAge] 20세 로그인 유저는 할인을 받지않는다.")
+    @Test
+    void calculateMemberAge_20() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateMemberAge(로그인_사용자_20세, 1500L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(1500L)
+        );
+    }
+
+    @DisplayName("[calculateMemberAge] 기존 요금이 운임요금인 350원 보다 적으면 할인이 적용되지 않는다.")
+    @Test
+    void calculateMemberAge_minimum() {
+        // when
+        var 추가요금이_계산된_요금 = Path.calculateMemberAge(로그인_사용자_8세, 349L);
+
+        // then
+        assertAll(
+                () -> assertThat(추가요금이_계산된_요금).isEqualTo(349L)
         );
     }
 }

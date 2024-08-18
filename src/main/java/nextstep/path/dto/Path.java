@@ -38,22 +38,25 @@ public class Path {
         Long totalPrice = calculateOverFare(totalDistance);
         totalPrice = calculateLineAdditionalFare(lines, sections, totalPrice);
         totalPrice = calculateMemberAge(member, totalPrice);
+
         return new Path(stations, totalDistance, totalDuration, totalPrice);
     }
 
     public static Long calculateLineAdditionalFare(final List<Line> lines, final Sections sections, final Long totalPrice) {
-        long additionalFare = 0;
-        for (Section section : sections.getSections()) {
-            for (Line line : lines) {
-                if(line.getAdditionalFare() == 0) continue;
-                if (line.hasSection(section)) {
-                    if (additionalFare < line.getAdditionalFare()) {
-                        additionalFare = line.getAdditionalFare();
-                    }
-                }
-            }
-        }
+        long additionalFare = sections.getSections().stream()
+                .mapToLong(section -> getMaxAdditionalFareForSection(lines, section))
+                .max()
+                .orElse(0);
+
         return totalPrice + additionalFare;
+    }
+
+    private static long getMaxAdditionalFareForSection(List<Line> lines, Section section) {
+        return lines.stream()
+                .filter(line -> line.getAdditionalFare() > 0 && line.hasSection(section))
+                .mapToLong(Line::getAdditionalFare)
+                .max()
+                .orElse(0);
     }
 
     public static Long calculateMemberAge(final Member member, final Long totalPrice) {
@@ -63,24 +66,26 @@ public class Path {
 
         int age = member.getAge();
 
-        double discountPercent = getDiscountPercent(age);
-
         if (totalPrice < MINIMUM_PRICE_FOR_DISCOUNT) {
             return totalPrice;
         }
 
+        double discountPercent = getDiscountPercent(age);
         long discountAmount = (long) (((totalPrice - 350) * discountPercent));
+
         return totalPrice - discountAmount;
     }
 
     private static double getDiscountPercent(final int age) {
-        if (age >= MIN_AGE_FOR_DISCOUNT && age <= MAX_AGE_FOR_DISCOUNT) {
-            if (age < 13) {
-                return DISCOUNT_PERCENT_CHILD * 0.01;
-            }
-            return DISCOUNT_PERCENT_ADULT * 0.01;
+        if (age < MIN_AGE_FOR_DISCOUNT || age > MAX_AGE_FOR_DISCOUNT) {
+            return 0;
         }
-        return 0;
+
+        if (age >= MIN_AGE_FOR_DISCOUNT && age < 13) {
+            return DISCOUNT_PERCENT_CHILD * 0.01;
+        }
+
+        return DISCOUNT_PERCENT_ADULT * 0.01;
     }
 
     public static Long calculateOverFare(final Long distance) {
@@ -107,7 +112,6 @@ public class Path {
         }
 
         return PathResponse.of(stationResponses, totalDistance, totalDuration, totalPrice);
-
     }
 
     public List<Station> getStations() {
