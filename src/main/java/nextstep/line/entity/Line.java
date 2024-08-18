@@ -1,8 +1,10 @@
 package nextstep.line.entity;
 
+import nextstep.section.entity.Section;
 import nextstep.section.entity.Sections;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
 public class Line {
@@ -18,6 +20,9 @@ public class Line {
 
     @Column(nullable = false)
     private Long distance;
+
+    @Column
+    private Long additionalFare = 0L;
 
     @Embedded
     private Sections sections;
@@ -49,6 +54,10 @@ public class Line {
         this.name = name;
     }
 
+    public boolean hasSection(final Section section) {
+        return sections.getSections().stream().anyMatch(sectionValue -> sectionValue.equals(section));
+    }
+
     public Long getId() {
         return id;
     }
@@ -63,6 +72,10 @@ public class Line {
 
     public Long getDistance() {
         return distance;
+    }
+
+    public Long getAdditionalFare() {
+        return additionalFare;
     }
 
     public Sections getSections() {

@@ -1,6 +1,7 @@
 package nextstep.path.domain;
 
 import nextstep.line.entity.Line;
+import nextstep.member.domain.Member;
 import nextstep.path.dto.Path;
 import nextstep.path.exception.PathException;
 import nextstep.section.entity.Section;
@@ -34,13 +35,13 @@ public class GraphModel {
         return new GraphModel(source, target);
     }
 
-    public Path findPath(final List<Line> lines, final String type) {
+    public Path findPath(final Member member, final List<Line> lines, final String type) {
         createGraphModel(lines, type);
         GraphPath<Long, DefaultWeightedEdge> graphPath = findShortestPath();
         List<Station> stations = getStations(lines, graphPath.getVertexList());
         Sections sections = getSections(graphPath.getEdgeList());
 
-        return Path.of(stations, sections);
+        return Path.of(member, lines, stations, sections);
     }
 
     public void createGraphModel(final List<Line> lines, final String type) {

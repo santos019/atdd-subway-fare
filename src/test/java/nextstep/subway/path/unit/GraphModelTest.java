@@ -1,6 +1,7 @@
 package nextstep.subway.path.unit;
 
 import nextstep.line.entity.Line;
+import nextstep.member.domain.Member;
 import nextstep.path.domain.GraphModel;
 import nextstep.path.dto.Path;
 import nextstep.path.exception.PathException;
@@ -40,6 +41,8 @@ public class GraphModelTest {
     Long 총_시간 = 10L;
     Long 총_비용 = 1250L;
 
+    Member 로그인_사용자_비할인대상;
+
     @BeforeEach
     public void setup() {
         강남역 = Station.of(1L, "강남역");
@@ -54,6 +57,7 @@ public class GraphModelTest {
         그래프_기본_모델 = GraphModel.of(1L, 2L);
 
         지하철_리스트 = Collections.singletonList(신분당선);
+        로그인_사용자_비할인대상 = Member.of(1L, "test@test.com", "password", 20);
 
     }
 
@@ -135,7 +139,7 @@ public class GraphModelTest {
         그래프_기본_모델.createGraphModel(지하철_리스트, DISTANCE.getValue());
 
         // when
-        Path path = 그래프_기본_모델.findPath(지하철_리스트, DISTANCE.getValue());
+        Path path = 그래프_기본_모델.findPath(로그인_사용자_비할인대상, 지하철_리스트, DISTANCE.getValue());
 
         // then
         assertAll(
@@ -164,7 +168,7 @@ public class GraphModelTest {
         그래프_기본_모델.createGraphModel(지하철_리스트, DURATION.getValue());
 
         // when
-        Path path = 그래프_기본_모델.findPath(지하철_리스트, DURATION.getValue());
+        Path path = 그래프_기본_모델.findPath(로그인_사용자_비할인대상, 지하철_리스트, DURATION.getValue());
 
         // then
         assertAll(
@@ -184,7 +188,7 @@ public class GraphModelTest {
 
         // when & then
         assertAll(
-                () -> assertThrows(PathException.class, () -> 그래프_기본_모델.findPath(List.of(), DISTANCE.getValue()))
+                () -> assertThrows(PathException.class, () -> 그래프_기본_모델.findPath(로그인_사용자_비할인대상, List.of(), DISTANCE.getValue()))
                         .getMessage().equals(PATH_NOT_FOUND.getDescription())
         );
     }

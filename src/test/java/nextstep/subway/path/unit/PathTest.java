@@ -1,6 +1,7 @@
 package nextstep.subway.path.unit;
 
 import nextstep.line.entity.Line;
+import nextstep.member.domain.Member;
 import nextstep.path.dto.Path;
 import nextstep.path.exception.PathException;
 import nextstep.section.entity.Section;
@@ -31,6 +32,8 @@ public class PathTest {
     Long 총_시간 = 5L;
     Long 총_비용 = 1250L;
 
+    Member 로그인_사용자_비할인대상;
+
     @BeforeEach
     public void setup() {
         강남역 = Station.of(1L, "강남역");
@@ -39,7 +42,10 @@ public class PathTest {
         강남역_역삼역_구간 = Section.of(강남역, 역삼역, 10L, 5L);
         구간들 = new Sections(Collections.singletonList(강남역_역삼역_구간));
         신분당선 = Line.of(1L, "신분당선", "red", 15L, 구간들);
-        path = Path.of(List.of(강남역, 역삼역), 구간들);
+
+        로그인_사용자_비할인대상 = Member.of(1L, "test@test.com", "password", 20);
+
+        path = Path.of(로그인_사용자_비할인대상, List.of(신분당선), List.of(강남역, 역삼역), 구간들);
     }
 
     @DisplayName("getVertexList와 getWeight의 정상 동작을 확인한다.")
@@ -77,7 +83,7 @@ public class PathTest {
     @Test
     void createPathResponse_fail1() {
         // given
-        var path = Path.of(List.of(), 구간들);
+        var path = Path.of(로그인_사용자_비할인대상, List.of(신분당선), List.of(), 구간들);
 
         // when & then
         assertThrows(PathException.class, () -> path.createPathResponse())

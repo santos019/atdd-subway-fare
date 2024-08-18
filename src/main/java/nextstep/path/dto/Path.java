@@ -1,6 +1,9 @@
 package nextstep.path.dto;
 
+import nextstep.line.entity.Line;
+import nextstep.member.domain.Member;
 import nextstep.path.exception.PathException;
+import nextstep.section.entity.Section;
 import nextstep.section.entity.Sections;
 import nextstep.station.dto.StationResponse;
 import nextstep.station.entity.Station;
@@ -16,6 +19,11 @@ public class Path {
     private final Long totalDuration;
     private final Long totalPrice;
 
+    private static final int MIN_AGE_FOR_DISCOUNT = 6;
+    private static final int MAX_AGE_FOR_DISCOUNT = 18;
+    private static final int DISCOUNT_PERCENT_CHILD = 50;
+    private static final int DISCOUNT_PERCENT_ADULT = 20;
+    private static final int MINIMUM_PRICE_FOR_DISCOUNT = 350;
 
     public Path(List<Station> stations, Long totalDistance, Long totalDuration, Long totalPrice) {
         this.stations = stations;
@@ -24,10 +32,54 @@ public class Path {
         this.totalPrice = totalPrice;
     }
 
-    public static Path of(final List<Station> stations, final Sections sections) {
+    public static Path of(final Member member, final List<Line> lines, final List<Station> stations, final Sections sections) {
         Long totalDistance = sections.getTotalDistance();
         Long totalDuration = sections.getTotalDuration();
-        return new Path(stations, totalDistance, totalDuration, calculateOverFare(totalDistance));
+        Long totalPrice = calculateOverFare(totalDistance);
+        totalPrice = calculateLineAdditionalFare(lines, sections, totalPrice);
+        totalPrice = calculateMemberAge(member, totalPrice);
+        return new Path(stations, totalDistance, totalDuration, totalPrice);
+    }
+
+    public static Long calculateLineAdditionalFare(final List<Line> lines, final Sections sections, final Long totalPrice) {
+        long additionalFare = 0;
+        for (Section section : sections.getSections()) {
+            for (Line line : lines) {
+                if (line.hasSection(section)) {
+                    if (additionalFare < line.getAdditionalFare()) {
+                        additionalFare = line.getAdditionalFare();
+                    }
+                }
+            }
+        }
+        return totalPrice + additionalFare;
+    }
+
+    public static Long calculateMemberAge(final Member member, final Long totalPrice) {
+        if (member == null) {
+            return totalPrice;
+        }
+
+        int age = member.getAge();
+
+        int discountPercent = getDiscountPercent(age);
+
+        if (totalPrice < MINIMUM_PRICE_FOR_DISCOUNT) {
+            return totalPrice;
+        }
+
+        long discountAmount = (totalPrice * discountPercent) / 100;
+        return totalPrice - discountAmount;
+    }
+
+    private static int getDiscountPercent(final int age) {
+        if (age >= MIN_AGE_FOR_DISCOUNT && age <= MAX_AGE_FOR_DISCOUNT) {
+            if (age < 13) {
+                return DISCOUNT_PERCENT_CHILD;
+            }
+            return DISCOUNT_PERCENT_ADULT;
+        }
+        return 0;
     }
 
     public static Long calculateOverFare(final Long distance) {

@@ -81,7 +81,7 @@ public class FavoriteServiceMockTest {
         sectionService = new SectionService(sectionRepository, stationService, lineService);
         memberService = new MemberServiceImpl(memberRepository);
         pathService = new DijkstraShortestPathService();
-        pathFinder = new PathFinder(stationService, lineService, pathService);
+        pathFinder = new PathFinder(stationService, lineService, pathService, memberService);
         favoriteService = new FavoriteService(favoriteRepository, memberService, stationService, pathFinder);
 
         강남역 = Station.of(1L, "강남역");
