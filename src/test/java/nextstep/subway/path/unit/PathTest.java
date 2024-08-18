@@ -66,10 +66,10 @@ public class PathTest {
     public void getVertexList_getWeight() {
         // then
         assertAll(
-                () -> assertEquals(List.of(강남역, 역삼역), path_비로그인.getStations()),
-                () -> assertEquals(총_거리, path_비로그인.getTotalDistance()),
-                () -> assertEquals(총_시간, path_비로그인.getTotalDuration()),
-                () -> assertEquals(총_비용, path_비로그인.getTotalPrice())
+                () -> assertThat(List.of(강남역, 역삼역)).isEqualTo(path_비로그인.getStations()),
+                () -> assertThat(총_거리).isEqualTo(path_비로그인.getTotalDistance()),
+                () -> assertThat(총_시간).isEqualTo(path_비로그인.getTotalDuration()),
+                () -> assertThat(총_비용).isEqualTo(path_비로그인.getTotalPrice())
         );
     }
 
@@ -82,13 +82,13 @@ public class PathTest {
         // then
         assertAll(
                 () -> assertNotNull(pathResponse),
-                () -> assertEquals(총_거리, pathResponse.getTotalDistance()),
-                () -> assertEquals(총_시간, pathResponse.getTotalDuration()),
-                () -> assertEquals(총_비용, pathResponse.getTotalPrice()),
-                () -> assertEquals(List.of(
+                () -> assertThat(총_거리).isEqualTo(pathResponse.getTotalDistance()),
+                () -> assertThat(총_시간).isEqualTo(pathResponse.getTotalDuration()),
+                () -> assertThat(총_비용).isEqualTo(pathResponse.getTotalPrice()),
+                () -> assertThat(List.of(
                         StationResponse.of(강남역.getId(), 강남역.getName()),
                         StationResponse.of(역삼역.getId(), 역삼역.getName())
-                ), pathResponse.getStationResponses())
+                )).isEqualTo(pathResponse.getStationResponses())
         );
     }
 
