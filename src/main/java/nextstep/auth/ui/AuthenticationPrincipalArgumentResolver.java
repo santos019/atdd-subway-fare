@@ -2,6 +2,7 @@ package nextstep.auth.ui;
 
 import nextstep.auth.AuthenticationException;
 import nextstep.auth.application.JwtTokenProvider;
+import nextstep.member.domain.AnonymousLoginMember;
 import nextstep.member.domain.LoginMember;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -33,10 +34,10 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return resolveAuthenticationPrincipal(webRequest);
     }
 
-    private Optional<LoginMember> resolveAuthenticationLogin(NativeWebRequest webRequest) {
+    private LoginMember resolveAuthenticationLogin(NativeWebRequest webRequest) {
         String authorization = webRequest.getHeader("Authorization");
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            return Optional.empty();
+            return new AnonymousLoginMember();
         }
 
         String token = authorization.split(" ")[1];
@@ -45,7 +46,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         }
 
         String email = jwtTokenProvider.getPrincipal(token);
-        return Optional.of(new LoginMember(email));
+        return new LoginMember(email);
     }
 
     private LoginMember resolveAuthenticationPrincipal(NativeWebRequest webRequest) {

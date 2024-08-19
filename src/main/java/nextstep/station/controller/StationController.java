@@ -44,7 +44,7 @@ public class StationController {
 
     @GetMapping("/paths")
     public ResponseEntity<Object> retrieveStationPath(
-            @AuthenticationLogin Optional<LoginMember> loginMember,
+            @AuthenticationLogin LoginMember loginMember,
             @RequestParam("source") Long source,
             @RequestParam("target") Long target,
             @RequestParam("type") String type) {

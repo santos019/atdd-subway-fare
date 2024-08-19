@@ -3,6 +3,7 @@ package nextstep.path.service;
 import nextstep.line.entity.Line;
 import nextstep.line.service.LineService;
 import nextstep.member.application.MemberService;
+import nextstep.member.domain.AnonymousLoginMember;
 import nextstep.member.domain.LoginMember;
 import nextstep.member.domain.Member;
 import nextstep.path.dto.PathResponse;
@@ -29,7 +30,7 @@ public class PathFinder {
     }
 
     @Transactional(readOnly = true)
-    public PathResponse retrieveStationPath(final Optional<LoginMember> loginMember, final String type, final Long source, final Long target) {
+    public PathResponse retrieveStationPath(final LoginMember loginMember, final String type, final Long source, final Long target) {
         validateStationExist(source, target);
         List<Line> lineList = lineService.getAllLines();
         Member member = findMemberByOptionalLoginMember(loginMember);
@@ -41,9 +42,9 @@ public class PathFinder {
         stationService.getStationByIdOrThrow(target);
     }
 
-    private Member findMemberByOptionalLoginMember(Optional<LoginMember> loginMember) {
-        if (loginMember == null || loginMember.isEmpty()) return null;
-        return memberService.findMemberByEmail(loginMember.get().getEmail());
+    private Member findMemberByOptionalLoginMember(LoginMember loginMember) {
+        if (loginMember instanceof AnonymousLoginMember) return null;
+        return memberService.findMemberByEmail(loginMember.getEmail());
     }
 
 }
