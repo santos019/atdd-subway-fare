@@ -38,7 +38,7 @@ public class FavoriteService {
     @Transactional
     public Long createFavorite(final LoginMember loginMember, final FavoriteRequest favoriteRequest) {
         Member member = memberService.findMemberByEmail(loginMember.getEmail());
-        pathFinder.retrieveStationPath(Optional.ofNullable(null), DISTANCE.getValue(), favoriteRequest.getSource(), favoriteRequest.getTarget());
+        pathFinder.retrieveStationPath(null, DISTANCE.getValue(), favoriteRequest.getSource(), favoriteRequest.getTarget());
         Station sourceStation = stationService.getStationByIdOrThrow(favoriteRequest.getSource());
         Station targetStation = stationService.getStationByIdOrThrow(favoriteRequest.getTarget());
         Favorite favorite = Favorite.of(member, sourceStation, targetStation);

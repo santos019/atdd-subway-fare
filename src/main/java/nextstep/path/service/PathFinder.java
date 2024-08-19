@@ -42,7 +42,7 @@ public class PathFinder {
     }
 
     private Member findMemberByOptionalLoginMember(Optional<LoginMember> loginMember) {
-        if (loginMember.isEmpty()) return null;
+        if (loginMember == null || loginMember.isEmpty()) return null;
         return memberService.findMemberByEmail(loginMember.get().getEmail());
     }
 
