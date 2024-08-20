@@ -15,8 +15,10 @@ public class CalculateOverFare {
         this.totalPrice = totalPrice;
     }
 
-    public static CalculateOverFare of (final Long totalDistance) {
-        return new CalculateOverFare(calculateOverFare(totalDistance));
+    public static Path of (Path path) {
+        Long totalDistance = calculateOverFare(path.getTotalDistance());
+        path.setTotalPrice(totalDistance);
+        return path;
     }
 
     public static Long calculateOverFare(final Long distance) {

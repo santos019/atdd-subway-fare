@@ -15,6 +15,7 @@ import nextstep.member.domain.Member;
 import nextstep.member.domain.MemberRepository;
 import nextstep.auth.exception.UnAuthorizedException;
 import nextstep.member.exception.MemberException;
+import nextstep.path.service.CalculateFareService;
 import nextstep.path.service.DijkstraShortestPathService;
 import nextstep.path.service.PathFinder;
 import nextstep.path.service.PathService;
@@ -64,6 +65,7 @@ public class FavoriteServiceMockTest {
     private MemberService memberService;
     private PathService pathService;
     private PathFinder pathFinder;
+    private CalculateFareService calculateFareService;
 
     private Station 강남역;
     private Station 역삼역;
@@ -83,7 +85,7 @@ public class FavoriteServiceMockTest {
         sectionService = new SectionService(sectionRepository, stationService, lineService);
         memberService = new MemberServiceImpl(memberRepository);
         pathService = new DijkstraShortestPathService();
-        pathFinder = new PathFinder(stationService, lineService, pathService, memberService);
+        pathFinder = new PathFinder(stationService, lineService, pathService, memberService, calculateFareService);
         favoriteService = new FavoriteService(favoriteRepository, memberService, stationService, pathFinder);
 
         강남역 = Station.of(1L, "강남역");

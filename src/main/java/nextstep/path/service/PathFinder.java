@@ -6,13 +6,13 @@ import nextstep.member.application.MemberService;
 import nextstep.member.domain.AnonymousLoginMember;
 import nextstep.member.domain.LoginMember;
 import nextstep.member.domain.Member;
+import nextstep.path.dto.Path;
 import nextstep.path.dto.PathResponse;
 import nextstep.station.service.StationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PathFinder {
@@ -21,12 +21,14 @@ public class PathFinder {
     private LineService lineService;
     private PathService pathService;
     private MemberService memberService;
+    private CalculateFareService calculateFareService;
 
-    public PathFinder(StationService stationService, LineService lineService, PathService pathService, MemberService memberService) {
+    public PathFinder(StationService stationService, LineService lineService, PathService pathService, MemberService memberService, CalculateFareService calculateFareService) {
         this.stationService = stationService;
         this.lineService = lineService;
         this.pathService = pathService;
         this.memberService = memberService;
+        this.calculateFareService = calculateFareService;
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +36,8 @@ public class PathFinder {
         validateStationExist(source, target);
         List<Line> lineList = lineService.getAllLines();
         Member member = findMemberByOptionalLoginMember(loginMember);
-        return pathService.findPath(member, type, source, target, lineList);
+        Path path = pathService.findPath(member, type, source, target, lineList);
+        return calculateFareService.calculateFare(path);
     }
 
     private void validateStationExist(final Long source, final Long target) {

@@ -14,10 +14,12 @@ import java.util.List;
 import static nextstep.common.constant.ErrorCode.PATH_NOT_FOUND;
 
 public class Path {
+    private final Member member;
+    private final List<Line> lines;
     private final List<Station> stations;
     private final Long totalDistance;
     private final Long totalDuration;
-    private final Long totalPrice;
+    private Long totalPrice;
 
     private static final int MIN_AGE_FOR_DISCOUNT = 6;
     private static final int MAX_AGE_FOR_DISCOUNT = 18;
@@ -25,7 +27,9 @@ public class Path {
     private static final int DISCOUNT_PERCENT_ADULT = 20;
     private static final int MINIMUM_PRICE_FOR_DISCOUNT = 350;
 
-    public Path(List<Station> stations, Long totalDistance, Long totalDuration, Long totalPrice) {
+    public Path(Member member, List<Line> lines, List<Station> stations, Long totalDistance, Long totalDuration, Long totalPrice) {
+        this.member = member;
+        this.lines = lines;
         this.stations = stations;
         this.totalDistance = totalDistance;
         this.totalDuration = totalDuration;
@@ -35,11 +39,8 @@ public class Path {
     public static Path of(final Member member, final List<Line> lines, final List<Station> stations, final Sections sections) {
         Long totalDistance = sections.getTotalDistance();
         Long totalDuration = sections.getTotalDuration();
-        Long totalPrice = calculateOverFare(totalDistance);
-        totalPrice = calculateLineAdditionalFare(lines, sections, totalPrice);
-        totalPrice = calculateMemberAge(member, totalPrice);
 
-        return new Path(stations, totalDistance, totalDuration, totalPrice);
+        return new Path(member, lines, stations, totalDistance, totalDuration, null);
     }
 
     public static Long calculateLineAdditionalFare(final List<Line> lines, final Sections sections, final Long totalPrice) {
@@ -114,6 +115,10 @@ public class Path {
         return PathResponse.of(stationResponses, totalDistance, totalDuration, totalPrice);
     }
 
+    public Member getMember() { return member; }
+
+    public List<Line> getLines() { return lines; }
+
     public List<Station> getStations() {
         return stations;
     }
@@ -128,6 +133,10 @@ public class Path {
 
     public Long getTotalPrice() {
         return totalPrice;
+    }
+
+    public void setTotalPrice(final Long totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
 
