@@ -47,5 +47,5 @@ public class CalculateMemberAgeFare {
 
         return DISCOUNT_PERCENT_ADULT * PERCENTAGE_FACTOR;
     }
-
 }
+

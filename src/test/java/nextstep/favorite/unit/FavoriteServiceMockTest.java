@@ -85,6 +85,7 @@ public class FavoriteServiceMockTest {
         sectionService = new SectionService(sectionRepository, stationService, lineService);
         memberService = new MemberServiceImpl(memberRepository);
         pathService = new DijkstraShortestPathService();
+        calculateFareService = new CalculateFareService();
         pathFinder = new PathFinder(stationService, lineService, pathService, memberService, calculateFareService);
         favoriteService = new FavoriteService(favoriteRepository, memberService, stationService, pathFinder);
 

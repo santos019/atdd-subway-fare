@@ -37,7 +37,8 @@ public class PathFinder {
         List<Line> lineList = lineService.getAllLines();
         Member member = findMemberByOptionalLoginMember(loginMember);
         Path path = pathService.findPath(member, type, source, target, lineList);
-        return calculateFareService.calculateFare(path);
+        calculateFareService.calculateFare(path);
+        return path.createPathResponse();
     }
 
     private void validateStationExist(final Long source, final Long target) {

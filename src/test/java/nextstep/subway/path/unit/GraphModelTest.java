@@ -40,7 +40,7 @@ public class GraphModelTest {
     Long 신분당선_기본_거리 = 15L;
     Long 총_거리 = 5L;
     Long 총_시간 = 10L;
-    Long 총_비용 = 1250L;
+    Long 총_비용 = null;
 
     Member 로그인_사용자_비할인대상;
 
@@ -161,7 +161,7 @@ public class GraphModelTest {
         var 강남역_논현역_구간_시간 = 2L;
         var 논현역_역삼역_구간_거리 = 5L;
         var 논현역_역삼역_구간_시간 = 1L;
-        var 강남역_논현역_역삼역_총_비용 = 1450L;
+        Long 강남역_논현역_역삼역_총_비용 = null;
         var 강남역_논현역_구간 = Section.of(강남역, 논현역, 강남역_논현역_구간_거리, 강남역_논현역_구간_시간);
         var 논현역_역삼역_구간 = Section.of(논현역, 역삼역, 논현역_역삼역_구간_거리, 논현역_역삼역_구간_시간);
         var 구간들 = new Sections(List.of(강남역_역삼역_구간, 강남역_논현역_구간, 논현역_역삼역_구간));

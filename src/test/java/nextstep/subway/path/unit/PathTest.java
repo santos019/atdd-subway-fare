@@ -34,7 +34,7 @@ public class PathTest {
     Long 기본_노선_추가요금 = 0L;
     Long 총_거리 = 10L;
     Long 총_시간 = 5L;
-    Long 총_비용 = 1250L;
+    Long 총_비용 = null;
 
     Member 로그인_사용자_비할인대상;
     Member 로그인_사용자_8세;

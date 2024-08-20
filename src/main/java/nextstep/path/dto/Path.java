@@ -17,6 +17,7 @@ public class Path {
     private final Member member;
     private final List<Line> lines;
     private final List<Station> stations;
+    private final Sections sections;
     private final Long totalDistance;
     private final Long totalDuration;
     private Long totalPrice;
@@ -27,10 +28,11 @@ public class Path {
     private static final int DISCOUNT_PERCENT_ADULT = 20;
     private static final int MINIMUM_PRICE_FOR_DISCOUNT = 350;
 
-    public Path(Member member, List<Line> lines, List<Station> stations, Long totalDistance, Long totalDuration, Long totalPrice) {
+    public Path(Member member, List<Line> lines, List<Station> stations, Sections sections, Long totalDistance, Long totalDuration, Long totalPrice) {
         this.member = member;
         this.lines = lines;
         this.stations = stations;
+        this.sections = sections;
         this.totalDistance = totalDistance;
         this.totalDuration = totalDuration;
         this.totalPrice = totalPrice;
@@ -40,7 +42,7 @@ public class Path {
         Long totalDistance = sections.getTotalDistance();
         Long totalDuration = sections.getTotalDuration();
 
-        return new Path(member, lines, stations, totalDistance, totalDuration, null);
+        return new Path(member, lines, stations, sections, totalDistance, totalDuration, null);
     }
 
     public static Long calculateLineAdditionalFare(final List<Line> lines, final Sections sections, final Long totalPrice) {
@@ -122,6 +124,8 @@ public class Path {
     public List<Station> getStations() {
         return stations;
     }
+
+    public Sections getSections() { return sections; }
 
     public Long getTotalDistance() {
         return totalDistance;
