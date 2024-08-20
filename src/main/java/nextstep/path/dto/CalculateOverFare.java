@@ -1,19 +1,15 @@
 package nextstep.path.dto;
 
 public class CalculateOverFare {
-    private Long totalPrice = 0L;
 
     private static final Long MIN_DISTANCE_OVERFARE = 10L;
     private static final Long SECOND_DISTANCE_OVERFARE = 50L;
     private static final Long DEFAULT_PRICE = 1250L;
     private static final int OVERFARE_FIRST = 5;
     private static final int OVERFARE_SECOND = 8;
+    private static final int DISCOUNT_DISTANCE = 11;
 
-    public CalculateOverFare() {}
-
-    public CalculateOverFare(final Long totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+    private CalculateOverFare() {}
 
     public static Path of (Path path) {
         Long totalDistance = calculateOverFare(path.getTotalDistance());
@@ -31,11 +27,7 @@ public class CalculateOverFare {
             overFare = OVERFARE_SECOND;
         }
 
-        return (long) ((Math.ceil((distance - 11) / overFare) + 1) * 100) + DEFAULT_PRICE;
-    }
-
-    public Long getTotalPrice() {
-        return totalPrice;
+        return (long) ((Math.ceil((distance - DISCOUNT_DISTANCE) / overFare) + 1) * 100) + DEFAULT_PRICE;
     }
 }
 
