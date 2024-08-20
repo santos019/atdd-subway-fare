@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class CalculateMemberAgeFareTest {
 
-    private Member 사용자_6세;
+    private Member 사용자_5세;
     private Member 사용자_8세;
     private Member 사용자_18세;
     private Member 사용자_20세;
@@ -35,7 +35,7 @@ public class CalculateMemberAgeFareTest {
 
     @BeforeEach
     void setup() {
-        사용자_6세 = Member.of(1L, "test@test", "password", 6);
+        사용자_5세 = Member.of(1L, "test@test", "password", 5);
         사용자_8세 = Member.of(2L, "test@test", "password", 8);
         사용자_18세 = Member.of(3L, "test@test", "password", 18);
         사용자_20세 = Member.of(4L, "test@test", "password", 20);
@@ -55,11 +55,11 @@ public class CalculateMemberAgeFareTest {
         var 기존_요금 = 1250L;
 
         // when
-        var totalFare = CalculateMemberAgeFare.calculateMemberAge(null, 기존_요금);
+        var 계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(null, 기존_요금);
 
         // then
         assertAll(
-                () -> assertThat(totalFare).isEqualTo(기존_요금)
+                () -> assertThat(계산된_요금).isEqualTo(기존_요금)
         );
     }
 
@@ -67,14 +67,14 @@ public class CalculateMemberAgeFareTest {
     @DisplayName("요금이 할인 기준 미만일 경우 할인 없이 그대로 반환")
     void calculateMemberAge_UnderMinimumPriceForDiscount_ReturnsOriginalPrice() {
         // given
-        var 기존_요금 = 300L; // 할인 기준인 350원 미만
+        var 기존_요금 = 300L;
 
         // when
-        Long totalFare = CalculateMemberAgeFare.calculateMemberAge(사용자_18세, 기존_요금);
+        Long 계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_18세, 기존_요금);
 
         // then
         assertAll(
-                () -> assertThat(totalFare).isEqualTo(기존_요금)
+                () -> assertThat(계산된_요금).isEqualTo(기존_요금)
         );
     }
 
@@ -85,12 +85,12 @@ public class CalculateMemberAgeFareTest {
         var 기존_요금 = 1250L;
 
         // when
-        Long 사용자_6세_계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_6세, 기존_요금);
+        Long 사용자_5세_계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_5세, 기존_요금);
         Long 사용자_20세_계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_20세, 기존_요금);
 
         // then
         assertAll(
-                () -> assertThat(사용자_6세_계산된_요금).isEqualTo(기존_요금),
+                () -> assertThat(사용자_5세_계산된_요금).isEqualTo(기존_요금),
                 () -> assertThat(사용자_20세_계산된_요금).isEqualTo(기존_요금)
         );
     }
@@ -102,10 +102,10 @@ public class CalculateMemberAgeFareTest {
         var 기존_요금 = 1250L;
 
         // when
-        var 계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_6세, 기존_요금);
+        var 계산된_요금 = CalculateMemberAgeFare.calculateMemberAge(사용자_8세, 기존_요금);
 
         // then
-        var 예상_요금 = 1250L - (long) ((1250L - 350) * 0.5);
+        var 예상_요금 = 기존_요금 - (long) ((기존_요금 - 350) * 0.5);
         assertAll(
                 () -> assertThat(계산된_요금).isEqualTo(예상_요금)
         );
@@ -137,7 +137,7 @@ public class CalculateMemberAgeFareTest {
         var 계산된_path = CalculateMemberAgeFare.of(path);
 
         // then
-        Long 예상_요금 = 기존_요금 - (long) ((기존_요금 - 350) * 0.5);
+        var 예상_요금 = 기존_요금 - (long) ((기존_요금 - 350) * 0.5);
         assertAll(
                 () -> assertThat(계산된_path.getTotalPrice()).isEqualTo(예상_요금)
         );

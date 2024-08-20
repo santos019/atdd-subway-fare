@@ -59,7 +59,9 @@ public class CalculateOverFareTest {
         Long fare = CalculateOverFare.calculateOverFare(거리_11이상_50이하);
 
         // then
-        assertThat(fare).isEqualTo(1450L);
+        assertAll(
+                () -> assertThat(fare).isEqualTo(1450L)
+        );
     }
 
     @Test
@@ -69,7 +71,9 @@ public class CalculateOverFareTest {
         Long fare = CalculateOverFare.calculateOverFare(거리_50_초과);
 
         // then
-        assertThat(fare).isEqualTo(1950L);
+        assertAll(
+                () -> assertThat(fare).isEqualTo(1950L)
+        );
     }
 
     @Test
@@ -86,7 +90,9 @@ public class CalculateOverFareTest {
         var result = CalculateOverFare.of(path);
 
         // then
-        assertThat(result.getTotalPrice()).isEqualTo(1250); // 계산된 요금 확인
+        assertAll(
+                () -> assertThat(result.getTotalPrice()).isEqualTo(1250)
+        );
     }
 
     @Test
@@ -103,7 +109,9 @@ public class CalculateOverFareTest {
         var result = CalculateOverFare.of(path);
 
         // then
-        assertThat(result.getTotalPrice()).isEqualTo(1450);
+        assertAll(
+                () -> assertThat(result.getTotalPrice()).isEqualTo(1450)
+        );
     }
 
     @Test
@@ -120,7 +128,9 @@ public class CalculateOverFareTest {
         var result = CalculateOverFare.of(path);
 
         // then
-        assertThat(result.getTotalPrice()).isEqualTo(1950);
+        assertAll(
+                () -> assertThat(result.getTotalPrice()).isEqualTo(1950)
+        );
     }
 }
 
